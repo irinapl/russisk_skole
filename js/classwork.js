@@ -86,7 +86,8 @@ $(function() {
     addNewTemplate: _.template($('#add-exercise-template').html()),
     
     events: {
-        "click #enablePageEdit" : "enablePageEdit",
+        "click #enableEditAll" : "enablePageEdit",
+        "click #closeEditAll" : "closeEditAll",
         "click .addNew":          "createNew",
         "click .cancelNew":       "cancelNew",
         "change .selectNewType":  "loadContentForSelectNewType"        
@@ -100,8 +101,11 @@ $(function() {
 
           this.$el.html(_.template($("#lesson-template").html()));
           
-          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', "createNew", "loadContentForSelectNewType", "cancelNew");        
+          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', "createNew", "loadContentForSelectNewType", "cancelNew");        
           
+          self.loadWeekPlan(function() { self.renderWeekPlan(); });
+          self.loadAllOtherData();
+        
           this.exercises = new Exercises;
           this.exercises.bind('add',     this.addOne);
           this.exercises.bind('reset',   this.addAll);
@@ -113,11 +117,8 @@ $(function() {
           this.exercises.query.find({
                     success: function(results) {
                         self.exercises.reset(results);
-                    },
-                    error:   function(e) { self.reportError (e); } 
+                    }
           });
-          
-          self.loadAllOtherData( function() { self.renderWeekPlan(); } );
     },
       
     reportError: function(error){
@@ -125,9 +126,8 @@ $(function() {
         $("#errorMessage").html("Feil oppstod: " + e.message);
         console.log(error);
     },
-    
-      
-    loadAllOtherData: function(callback) {
+         
+    loadWeekPlan: function(callback) {
         if (this.weekplan) {
           if (callback) callback();
         } else {
@@ -143,7 +143,21 @@ $(function() {
                     });
         }
     },
-        
+      
+    loadBooks: function() {
+        var bookQuery = new Parse.Query(Book); 
+        bookQuery.equalTo("children", state.get("children"));
+        bookQuery.find({
+                    success: function(results) {
+                        self.books = results;
+                    }
+            });
+    },
+      
+    loadAllOtherData: function() {
+        this.loadBooks();
+    },
+      
     loadContentForSelectNewType: function(e) {
       var selectedType = e.target.options[e.target.selectedIndex].value;
       if(selectedType == "-"){
@@ -157,44 +171,36 @@ $(function() {
       var dropdownWithListOfResources = $(idPrefix + " .newSelectName");
       dropdownWithListOfResources.html("");
       dropdownWithListOfResources.show();
-        
+    
+    
+      $(idPrefix + " .newContent").show();
+    
       if(selectedType == "book"){
+            console.log(idPrefix + " .newSelectName");
+            for (var i = 0; i < self.books.length; i++) { 
+                var book = self.books[i];
+                dropdownWithListOfResources.append('<option value="' + book.get("book") + '">' + book.get("book") + '</option>');
+            }
           
-          var bookQuery = new Parse.Query(Book); 
-          bookQuery.equalTo("children", state.get("children"));
-          bookQuery.find({
-                    success: function(results) {
-                        
-                        console.log(idPrefix + " .newSelectName");
-                        
-                        for (var i = 0; i < results.length; i++) { 
-                            var book = results[i];
-                            dropdownWithListOfResources.append('<option value="' + book.get("book") + '">' + book.get("book") + '</option>');
-                        }
-                        
-                        $(idPrefix + " .newContent").show();
-                        $(idPrefix + ' .actions').show();
-                    }
-            });
-        
       }else if(selectedType == "readingbook"){
         
       }else if(selectedType == "film"){
           
           
-          $(idPrefix + " .newContent").show();
-          $(idPrefix + ' .actions').show();
+          
+          
         
       }else if(selectedType == "audiobook"){
         
           
-          $(idPrefix + " .newContent").show();
-          $(idPrefix + ' .actions').show();
+         
+          
       }else{
           dropdownWithListOfResources.hide();
-          $(idPrefix + ' .actions').show();
-      }
+          $(idPrefix + " .newContent").hide();
           
+      }
+      $(idPrefix + ' .actions').show();   
     },
     
     createNew: function(e) {
@@ -219,58 +225,38 @@ $(function() {
       
     cancelNew: function(e) {
           var lesson = e.target.getAttribute("data-lesson");
-
-          console.log("cancelNew, lesson =" + lesson);
           $('#' + lesson + ' .newExercise .actions').hide();
           $('#' + lesson + ' .newExercise .newContent').hide();
           $('#' + lesson + ' .selectNewType option[value=""]').attr('selected','selected');
     },
       
     render: function() {
-      $('.newExercise').hide();
-      /*$('.newExercise .newContent').hide();
-      $('.newExercise div.actions').hide();*/
+         //$('.newExercise').hide();
+         this.delegateEvents();
+         return this;
+    },
       
+    enablePageEdit: function() {
+      $('#enableEditAll').hide();
+      $('#closeEditAll').show();
+      $('.newExercise').show();
+      $('.existing div.actions').show();
+        
       this.delegateEvents();
       return this;
     },
       
-    enablePageEdit: function() {
-      console.log("enableEditAll");
-        
-      $('#lesson1 .newExercise').html(this.addNewTemplate({ lesson: "lesson1" }));
-      $('#lesson2 .newExercise').html(this.addNewTemplate({ lesson: "lesson2" }));
-      $('#lesson3 .newExercise').html(this.addNewTemplate({ lesson: "lesson3" }));
-      $('#homework .newExercise').html(this.addNewTemplate({ lesson: "homework" }));
-      
-      $('.newExercise .newContent').hide();
-      $('.newExercise div.actions').hide();
-      
-      this.delegateEvents();
-      return this;
+    closeEditAll: function() {
+      $('.newExercise').hide();
+      $('.existing div.actions').hide();
+      $('#closeEditAll').hide();
+      $('#enableEditAll').show();
     },
       
     // Add details about week plan (where, teacher, comments, ..)
     renderWeekPlan: function() {
-     
       var weekPlanTemplate = _.template($("#weekplan-template").html());
       $("#nextTimeDetails").html(weekPlanTemplate({ children: state.get("children") ,weekplan: weekplan.toJSON()} ));
-    
-      /*var children = state.get("children");
-      var group = "Младшая";
-      var teacherColumnName = "small_kids";
-      if(children == "big"){
-        group = "Старшая";
-        teacherColumnName = "big_kids";
-      }
-      $("#titleChildren").html(group + " группа");
-      
-      var asJson = self.weekplan.toJSON();
-      
-      $("#nextTime").html(asJson["formattedDate"]);
-      $("#nextTimeTeacher").html(self.weekplan.get(teacherColumnName));
-      $("#nextTimeWhere").html(self.weekplan.get("where"));
-      $("#nextTimeComments").html(self.weekplan.get("comments"));*/
     },
     
     // Add one exercise row to ona of the lessons or homework
@@ -284,10 +270,21 @@ $(function() {
       }
         
       this.$(exId + " .existing").append( renderedExercise );
-      this.$(exId + " .actions").hide();
+      //this.$(exId + " .actions").hide();
     },
     
     addAll: function(collection, filter) {
+      $('#enableEditAll').show();
+      $('#closeEditAll').hide();
+        
+      $('#lesson1 .newExercise').html(this.addNewTemplate({ lesson: "lesson1" }));
+      $('#lesson2 .newExercise').html(this.addNewTemplate({ lesson: "lesson2" }));
+      $('#lesson3 .newExercise').html(this.addNewTemplate({ lesson: "lesson3" }));
+      $('#homework .newExercise').html(this.addNewTemplate({ lesson: "homework" }));
+        
+      $('.newExercise').hide();
+      $('div.actions').hide();
+        
       this.exercises.each(this.addOne);
     }
   });

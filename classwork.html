@@ -38,7 +38,8 @@
        <div class="row">    
           <div id="errorMessage" class="ten columns error"> </div>
           <div class="one column"><input type="buton" class="button right" id="enableEditAll" value="Изменить"/></div>
-        </div>
+          <div class="one column"><input type="buton" class="button right" id="closeEditAll" value="Готово" style="display:none"/></div>
+       </div>
         
        <h6>1. Урок</h6>
        <div id="lesson1">
@@ -74,16 +75,18 @@
         </label>
         <input class="edit w300 newText"  value="<%= !text ? "legg inn freetext" : text %>">
         
-        <div class="actions">
+        <div class="actions" style="display:none">
           <image src="css\images\edit.png"   class="editLink" title="Изменить"/>
           <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
           <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
           <image src="css\images\trash.png"  class="remove" title="Удалить"/>
        </div>
+
     </script>
 
     <script type="text/template" id="add-exercise-template">
-        + <select class="selectNewType" data-lesson="<%= lesson %>">
+        
+          + <select class="selectNewType" data-lesson="<%= lesson %>">
                 <option value="-">что?</option>
                 <option value="book">Учебное пособие</option>
                 <option value="readingbook">Книгу для чтения</option>
@@ -91,13 +94,12 @@
                 <% if (lesson == "homework"){ %><option value="words">Часто используемые слова</option><% } %>
                 <option value="audiobook">Аудиокниги</option>
                 <option value="freetext">Другое</option>
-          </select>
-          
-          <div class="newContent">
+            </select>
+          <div class="newContent" style="display:none">
                 <select class="newSelectName"></select>
                 <input class="newFreeText" value="" class="w300"/>
           </div>
-          <div class="actions">
+          <div class="actions" style="display:none">
               <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
               <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
           </div>
@@ -123,7 +125,6 @@
                     <%= (children == "small") ? weekplan.data.small_kids : weekplan.data.big_kids %>
                 </div>
             </div>
-  
     </script>
  
 </body>
