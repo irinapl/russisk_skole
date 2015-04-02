@@ -216,6 +216,10 @@ $(function() {
                                    listOfResources.append('<option value="' + resource.id + '">' + resource.get("book") + '</option>'); 
                                 });
 
+              // START HERE:
+              // Show from and to with correct last unit!!!
+              //$(elemIdPrefix + ' .actions').show();
+              
           }else if(selectedType == "readingbook"){
               self.readingbooks.each( function(resource){
                                    listOfResources.append('<option value="' + resource.id + '">' + resource.get("name") + '</option>'); 
@@ -232,7 +236,7 @@ $(function() {
 
           } else {
               listOfResources.hide();
-              $(elemIdPrefix + " .newContent").hide();
+              $(elemIdPrefix + " .newSelectName").hide();
 
           }
           $(elemIdPrefix + ' .actions').show();   

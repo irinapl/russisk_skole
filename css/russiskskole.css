@@ -17,11 +17,16 @@ h6 {
     background-color: #B8E4B1;
 }
 
+
+select.newSelectName{
+    margin-bottom: 15px;
+}
+
 div .help {
     color: lightgrey;
     font-style: italic;
     font-weight: normal;
-    padding-top: 15px;
+    
 }
 
 .done {
