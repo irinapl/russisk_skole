@@ -35,11 +35,11 @@
     
     
     <script type="text/template" id="lesson-template">
-       <div class="row">    
-          <div id="errorMessage" class="ten columns error"> </div>
-          <div class="one column"><input type="buton" class="button right" id="enableEditAll" value="Изменить"/></div>
-          <div class="one column"><input type="buton" class="button right" id="closeEditAll" value="Готово" style="display:none"/></div>
-       </div>
+       <div id="errorMessage" class="ten columns error"> </div>
+       <div class="row">
+            <input type="buton" class="button" id="enableEditAll" value="Изменить"/>
+            <input type="buton" class="button" id="closeEditAll" value="Готово" style="display:none"/>
+        </div>
         
        <h6>1. Урок</h6>
        <div id="lesson1">
@@ -85,24 +85,31 @@
     </script>
 
     <script type="text/template" id="add-exercise-template">
-        
-          + <select class="selectNewType" data-lesson="<%= lesson %>">
-                <option value="-">что?</option>
-                <option value="book">Учебное пособие</option>
-                <option value="readingbook">Книгу для чтения</option>
-                <option value="film">Фильм</option>
-                <% if (lesson == "homework"){ %><option value="words">Часто используемые слова</option><% } %>
-                <option value="audiobook">Аудиокниги</option>
-                <option value="freetext">Другое</option>
-            </select>
-          <div class="newContent" style="display:none">
-                <select class="newSelectName"></select>
-                <input class="newFreeText" value="" class="w300"/>
-          </div>
-          <div class="actions" style="display:none">
-              <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
-              <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
-          </div>
+          <div class="row">
+             <div class="two columns">
+                  + <select class="selectNewType" data-lesson="<%= lesson %>">
+                        <option value="-">что?</option>
+                        <option value="book">Учебное пособие</option>
+                        <option value="readingbook">Книгу для чтения</option>
+                        <option value="movie">Фильм</option>
+                        <% if (lesson == "homework"){ %><option value="words">Часто используемые слова</option><% } %>
+                        <option value="audiobook">Аудиокниги</option>
+                        <option value="freetext">Другое</option>
+                    </select>
+             </div>
+              <div class="ten columns newContent" style="display:none">
+                    <select class="newSelectName"></select>
+                    
+                    <div class="help">Добавь свой текст:</div>
+                    <textarea class="newFreeText" value="" style="width: 300px;" />
+                    
+                    <div class="actions" style="display:none">
+                      <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
+                      <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
+                  </div>
+              </div>
+        </div>
+          
     </script>
 
     <script type="text/template" id="weekplan-template">

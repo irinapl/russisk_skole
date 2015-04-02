@@ -17,6 +17,13 @@ h6 {
     background-color: #B8E4B1;
 }
 
+div .help {
+    color: lightgrey;
+    font-style: italic;
+    font-weight: normal;
+    padding-top: 15px;
+}
+
 .done {
     background-color: white;
     color: lightgrey;

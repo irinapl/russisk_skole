@@ -103,8 +103,13 @@ $(function() {
           
           _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', "createNew", "loadContentForSelectNewType", "cancelNew");        
           
-          self.loadWeekPlan(function() { self.renderWeekPlan(); });
-          self.loadAllOtherData();
+          self._loadWeekPlan(function() { self.renderWeekPlan(); });
+          self._loadAllOtherData();
+        
+          this.exercises = new Exercises;
+          this.exercises.bind('add',     this.addOne);
+          this.exercises.bind('reset',   this.addAll);
+          this.exercises.bind('all',     this.render);
         
           this.exercises = new Exercises;
           this.exercises.bind('add',     this.addOne);
@@ -121,13 +126,7 @@ $(function() {
           });
     },
       
-    reportError: function(error){
-        var message = error ? error.message : "";
-        $("#errorMessage").html("Feil oppstod: " + e.message);
-        console.log(error);
-    },
-         
-    loadWeekPlan: function(callback) {
+     _loadWeekPlan: function(callback) {
         if (this.weekplan) {
           if (callback) callback();
         } else {
@@ -144,63 +143,99 @@ $(function() {
         }
     },
       
-    loadBooks: function() {
+    _loadAllOtherData: function() {
+        this._loadBooks();
+        this._loadReadingBooks();
+        this._loadAudioBooks();
+        this._loadFilms();
+    },
+      
+    _loadBooks: function() {
         var bookQuery = new Parse.Query(Book); 
         bookQuery.equalTo("children", state.get("children"));
         bookQuery.find({
                     success: function(results) {
-                        self.books = results;
+                        var collection = new Books;
+                        self.books = collection.reset(results);
+                    }
+            });
+    },
+    
+    _loadReadingBooks: function() {
+        var query = new Parse.Query(ReadingBook); 
+        query.equalTo("children", state.get("children"));
+        query.notEqualTo("done", true);
+        query.find({
+                    success: function(results) {
+                        var collection = new ReadingBooks;
+                        self.readingbooks = collection.reset(results);
+                    }
+            });
+    },
+    _loadAudioBooks: function() {
+        var query = new Parse.Query(AudioBook); 
+        query.notEqualTo("done", true);
+        query.find({
+                    success: function(results) {
+                        var collection = new AudioBooks;
+                        self.audiobooks = collection.reset(results);
+                    }
+            });
+    },
+    _loadFilms: function() {
+        var query = new Parse.Query(Movie); 
+        query.notEqualTo("done", true);
+        query.find({
+                    success: function(results) {
+                        var collection = new Movies;
+                        self.movies = collection.reset(results);
                     }
             });
     },
       
-    loadAllOtherData: function() {
-        this.loadBooks();
-    },
       
     loadContentForSelectNewType: function(e) {
-      var selectedType = e.target.options[e.target.selectedIndex].value;
-      if(selectedType == "-"){
-        this.cancelNew(e); 
-      }
-      var lesson = e.target.getAttribute("data-lesson");
-      
-      console.log("selectedType = " + selectedType);
+          var selectedType = e.target.options[e.target.selectedIndex].value;
+          if(selectedType == "-"){
+                this.cancelNew(e); 
+          }
         
-      var idPrefix = '#' + lesson + ' .newExercise';
-      var dropdownWithListOfResources = $(idPrefix + " .newSelectName");
-      dropdownWithListOfResources.html("");
-      dropdownWithListOfResources.show();
-    
-    
-      $(idPrefix + " .newContent").show();
-    
-      if(selectedType == "book"){
-            console.log(idPrefix + " .newSelectName");
-            for (var i = 0; i < self.books.length; i++) { 
-                var book = self.books[i];
-                dropdownWithListOfResources.append('<option value="' + book.get("book") + '">' + book.get("book") + '</option>');
-            }
-          
-      }else if(selectedType == "readingbook"){
-        
-      }else if(selectedType == "film"){
-          
-          
-          
-          
-        
-      }else if(selectedType == "audiobook"){
-        
-          
-         
-          
-      }else{
-          dropdownWithListOfResources.hide();
-          $(idPrefix + " .newContent").hide();
-          
-      }
-      $(idPrefix + ' .actions').show();   
+          var lesson = e.target.getAttribute("data-lesson");
+          var elemIdPrefix = '#' + lesson + ' .newExercise';
+
+          // main select / dropdown with resources, like books, films, etc.
+          var listOfResources = $(elemIdPrefix + " .newSelectName");
+          listOfResources.html("");
+          listOfResources.show();
+
+
+          $(elemIdPrefix + " .newContent").show();
+
+          if(selectedType == "book"){
+              self.books.each( function(resource){
+                                   listOfResources.append('<option value="' + resource.id + '">' + resource.get("book") + '</option>'); 
+                                });
+
+          }else if(selectedType == "readingbook"){
+              self.readingbooks.each( function(resource){
+                                   listOfResources.append('<option value="' + resource.id + '">' + resource.get("name") + '</option>'); 
+                                });
+
+          }else if(selectedType == "movie"){
+              self.movies.each( function(resource){
+                                   listOfResources.append('<option value="' + resource.id + '">' + resource.get("name") + '</option>'); 
+                                });
+          }else if(selectedType == "audiobook"){
+            self.audiobooks.each( function(resource){
+                                   listOfResources.append('<option value="' + resource.id + '">' + resource.get("name") + '</option>'); 
+                                });
+
+          } else {
+              listOfResources.hide();
+              $(elemIdPrefix + " .newContent").hide();
+
+          }
+          $(elemIdPrefix + ' .actions').show();   
     },
     
     createNew: function(e) {
@@ -224,14 +259,13 @@ $(function() {
     },
       
     cancelNew: function(e) {
-          var lesson = e.target.getAttribute("data-lesson");
-          $('#' + lesson + ' .newExercise .actions').hide();
-          $('#' + lesson + ' .newExercise .newContent').hide();
-          $('#' + lesson + ' .selectNewType option[value=""]').attr('selected','selected');
+      var lesson = e.target.getAttribute("data-lesson");
+      $('#' + lesson + ' .newExercise .actions').hide();
+      $('#' + lesson + ' .newExercise .newContent').hide();
+      $('#' + lesson + ' .selectNewType option[value=""]').attr('selected','selected');
     },
       
     render: function() {
-         //$('.newExercise').hide();
          this.delegateEvents();
          return this;
     },
@@ -268,22 +302,19 @@ $(function() {
       if(exercise.get("lesson") == "homework"){
         exId = "#homework";
       }
-        
       this.$(exId + " .existing").append( renderedExercise );
-      //this.$(exId + " .actions").hide();
     },
     
     addAll: function(collection, filter) {
       $('#enableEditAll').show();
       $('#closeEditAll').hide();
+      $('.newExercise').hide();
+      $('div.actions').hide();
         
       $('#lesson1 .newExercise').html(this.addNewTemplate({ lesson: "lesson1" }));
       $('#lesson2 .newExercise').html(this.addNewTemplate({ lesson: "lesson2" }));
       $('#lesson3 .newExercise').html(this.addNewTemplate({ lesson: "lesson3" }));
       $('#homework .newExercise').html(this.addNewTemplate({ lesson: "homework" }));
-        
-      $('.newExercise').hide();
-      $('div.actions').hide();
         
       this.exercises.each(this.addOne);
     }
@@ -302,10 +333,7 @@ $(function() {
     },
 
     render: function() {
-        var planId = state.get("planId");
-        var children = state.get("children");
-            
-        new LessonView(planId, children);
+        new LessonView(state.get("planId"), state.get("children"));
     }
   });
 
@@ -329,30 +357,10 @@ $(function() {
     }
   });
   
-    
-    
-  function loadAllWeNeed(){
-      /*allDataLoaded : false;
-      weekplan: null;
-      books: null,
-      readingBooks: null,
-      audioBooks : null,
-      films: null,
-      words: null*/
-      state.set("allDataLoaded", true);
-      console.log("loadAllWeNeed: allDataLoaded=" + state.get("allDataLoaded"));
-  }
-    
-    
-  
-    
   var state = new AppState;
      
   new LessonRouter;
   new LessonPageView;
-    
-  loadAllWeNeed();
-
   Parse.history.start();
     
 });  
