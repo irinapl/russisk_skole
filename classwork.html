@@ -24,28 +24,11 @@
 
 <body>
     <div class="container" id="lessonPage">
-        
-      <div class="eleven columns" style="margin-top: 5%">
-        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
-        <br/><br/>
-        
-        <h4>Занятие: <span id="titleChildren"></span></h4>
-        <div id="nextTimeDetails">
-            <h5 id="nextTimeComments"></h5>
-            <div class="row">
-                <div class="one columns"><label>День:</label></div>
-                <div class="ten columns"><span id="nextTime"/></div>
-            </div>
-            <div class="row">
-                <div class="one columns"><label>Где:</label></div>
-                <div class="ten columns"><span id="nextTimeWhere" /></div>
-            </div>
-            <div class="row">
-                <div class="one columns"><label>Учитель: </label></div>
-                <div class="ten columns"><span id="nextTimeTeacher" /></div>
-            </div>
-        </div>
-        <div id="classwork" class="content"></div>  
+        <div class="eleven columns" style="margin-top: 5%">
+            <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
+            <br/><br/>
+            <div id="nextTimeDetails"></div>
+            <div id="classwork" class="content"></div>  
         </div>
       </div>
     </div>
@@ -118,6 +101,29 @@
               <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
               <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
           </div>
+    </script>
+
+    <script type="text/template" id="weekplan-template">
+            <h4>Занятие:  <%= (children == "small") ? "Младшая" : "Старшая" %></span></h4>        
+            <h5>
+                <%= (weekplan.formattedEvent == undefined || weekplan.formattedEvent == "") ? '' : weekplan.formattedEvent +': '%>
+                <%= weekplan.data.comments == undefined ? '-'  : weekplan.data.comments %>
+            </h5>
+            <div class="row">
+                <div class="one columns"><label>День:</label></div>
+                <div class="ten columns"><%= weekplan.formattedDate %></div>
+            </div>
+            <div class="row">
+                <div class="one columns"><label>Где:</label></div>
+                <div class="ten columns"><%= weekplan.data.where %></div>
+            </div>
+            <div class="row">
+                <div class="one columns"><label>Учитель: </label></div>
+                <div class="ten columns">
+                    <%= (children == "small") ? weekplan.data.small_kids : weekplan.data.big_kids %>
+                </div>
+            </div>
+  
     </script>
  
 </body>

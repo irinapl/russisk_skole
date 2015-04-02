@@ -137,8 +137,9 @@ $(function() {
           this.weekplan = new WeekPlan;  
           this.weekplan.query = new Parse.Query(WeekPlan);
           this.weekplan.query.get(planId, {
-                        success: function(weekplan) {  if (callback) callback(weekplan);     },
-                        error:   function(e) { self.reportError (e); } 
+                        success: function(weekplan) { 
+                            self.weekplan = weekplan; if (callback) callback();   
+                        }
                     });
         }
     },
@@ -251,24 +252,25 @@ $(function() {
       
     // Add details about week plan (where, teacher, comments, ..)
     renderWeekPlan: function() {
-          
-      var children = state.get("children");
+     
+      var weekPlanTemplate = _.template($("#weekplan-template").html());
+      $("#nextTimeDetails").html(weekPlanTemplate({ children: state.get("children") ,weekplan: weekplan.toJSON()} ));
     
+      /*var children = state.get("children");
       var group = "Младшая";
       var teacherColumnName = "small_kids";
       if(children == "big"){
         group = "Старшая";
         teacherColumnName = "big_kids";
       }
-      
-      var asJson = this.weekplan.toJSON();
-      
       $("#titleChildren").html(group + " группа");
+      
+      var asJson = self.weekplan.toJSON();
+      
       $("#nextTime").html(asJson["formattedDate"]);
-      $("#nextTimeTeacher").html(this.weekplan.get(teacherColumnName));
-      $("#nextTimeWhere").html(this.weekplan.get("where"));
-      $("#nextTimeComments").html(this.weekplan.get("comments"));
-        
+      $("#nextTimeTeacher").html(self.weekplan.get(teacherColumnName));
+      $("#nextTimeWhere").html(self.weekplan.get("where"));
+      $("#nextTimeComments").html(self.weekplan.get("comments"));*/
     },
     
     // Add one exercise row to ona of the lessons or homework
