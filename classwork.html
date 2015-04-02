@@ -1,0 +1,124 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Russisk skole</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+      
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/skeleton.css?s" />
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/normalize.css?s" />
+  <link rel="stylesheet" href="css/russiskskole.css" />
+       
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.5.min.js"></script>
+  <script type="text/javascript" src="js/parselogin.js"></script>
+  <script type="text/javascript" src="js/models.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/classwork.js"></script>
+</head>
+
+
+<body>
+    <div class="container" id="lessonPage">
+        
+      <div class="eleven columns" style="margin-top: 5%">
+        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
+        <br/><br/>
+        
+        <h4>Занятие: <span id="titleChildren"></span></h4>
+        <div id="nextTimeDetails">
+            <h5 id="nextTimeComments"></h5>
+            <div class="row">
+                <div class="one columns"><label>День:</label></div>
+                <div class="ten columns"><span id="nextTime"/></div>
+            </div>
+            <div class="row">
+                <div class="one columns"><label>Где:</label></div>
+                <div class="ten columns"><span id="nextTimeWhere" /></div>
+            </div>
+            <div class="row">
+                <div class="one columns"><label>Учитель: </label></div>
+                <div class="ten columns"><span id="nextTimeTeacher" /></div>
+            </div>
+        </div>
+        <div id="classwork" class="content"></div>  
+        </div>
+      </div>
+    </div>
+    
+    
+    <script type="text/template" id="lesson-template">
+       <div class="row">    
+          <div id="errorMessage" class="ten columns error"> </div>
+          <div class="one column"><input type="buton" class="button right" id="enableEditAll" value="Изменить"/></div>
+        </div>
+        
+       <h6>1. Урок</h6>
+       <div id="lesson1">
+            <ul class="existing"></ul>
+            <div class="newExercise row"></div>
+       </div>
+       
+       <h6>2. Урок</h6>
+       <div id="lesson2">
+            <ul class="existing"></ul>
+            <div class="newExercise row"></div>
+       </div>
+       
+       <h6>3. Урок</h6>
+       <div id="lesson3">
+            <ul class="existing"></ul>
+            <div class="newExercise row"></div>
+       </div>
+       
+       <h6>Домашнее задание</h6>
+       <div id="homework">
+            <ul class="existing"></ul>
+            <div class="newExercise row"></div>
+       </div>
+     </script>
+    
+    <script type="text/template" id="exercise-template">
+        <label>
+            <%= type %>        
+            <%= from %> - <%= to %>
+        
+            <%= text %>
+        </label>
+        <input class="edit w300 newText"  value="<%= !text ? "legg inn freetext" : text %>">
+        
+        <div class="actions">
+          <image src="css\images\edit.png"   class="editLink" title="Изменить"/>
+          <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
+          <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
+          <image src="css\images\trash.png"  class="remove" title="Удалить"/>
+       </div>
+    </script>
+
+    <script type="text/template" id="add-exercise-template">
+        + <select class="selectNewType" data-lesson="<%= lesson %>">
+                <option value="-">что?</option>
+                <option value="book">Учебное пособие</option>
+                <option value="readingbook">Книгу для чтения</option>
+                <option value="film">Фильм</option>
+                <% if (lesson == "homework"){ %><option value="words">Часто используемые слова</option><% } %>
+                <option value="audiobook">Аудиокниги</option>
+                <option value="freetext">Другое</option>
+          </select>
+          
+          <div class="newContent">
+                <select class="newSelectName"></select>
+                <input class="newFreeText" value="" class="w300"/>
+          </div>
+          <div class="actions">
+              <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
+              <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
+          </div>
+    </script>
+ 
+</body>
+

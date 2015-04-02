@@ -1,0 +1,76 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Russisk skole</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+      
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/skeleton.css?s" />
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/normalize.css?s" />
+  <link rel="stylesheet" href="css/russiskskole.css" />
+       
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.5.min.js"></script>  
+  <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script type="text/javascript" src="js/parselogin.js"></script>
+  <script type="text/javascript" src="js/models.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+</head>
+
+
+<body>
+    <div class="container" id="planPage">
+        
+      <div class="eleven columns" style="margin-top: 5%">
+        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< Tilbake" />
+        <br>
+        <h5>Lesebøker</h5>
+        <div id="annualPlan" class="content">
+                        
+            <h6>Store barn</h6>
+            <div id="listBig"></div>
+            
+            <h5></h5>
+            
+            <h6>Små barn</h6>
+            <div id="listSmall"></div>
+
+        </div>
+      </div>
+    </div>
+</body>
+
+<script  id="words">
+    var books = new ReadingBooks();
+    
+    books.fetch({
+        
+          success: function(collection) {
+            var listSmall = $("#listSmall");
+            var listBig = $("#listBig");
+              
+            collection.each(function(object) {
+                var doneClass = object.get("done") ? "done" : "";
+                var order = object.get("order");
+                var name = object.get("name");
+                var children = object.get("children");
+                
+                var rowDiv = "<div class='row " + doneClass + "'>" + order + ". " + name + "</div>";
+                
+                if( children == "small"){
+                    listSmall.append(rowDiv);
+                }else{
+                    listBig.append(rowDiv);
+                }
+            });
+          },
+          error: function(collection, error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+    
+</script>
+

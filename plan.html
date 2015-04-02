@@ -1,0 +1,133 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Russisk skole</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+      
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/skeleton.css?s" />
+  <link rel="stylesheet" href="Skeleton-2.0.4/css/normalize.css?s" />
+  <link rel="stylesheet" href="css/russiskskole.css" />
+       
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.5.min.js"></script>
+  <script type="text/javascript" src="js/parselogin.js"></script>
+  <script type="text/javascript" src="js/models.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/plan.js"></script>
+</head>
+
+
+<body>
+    <div class="container" id="planPage">
+        
+      <div class="eleven columns" style="margin-top: 5%">
+        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< Tilbake" />
+        <br>
+        <h5>Годовой план 2015</h5>
+        <div id="annualPlan" class="content"></div>
+          
+      </div>
+    </div>
+    
+    
+    <script type="text/template" id="manage-weekplan-template">
+       <div id="main">
+         <table id="weekplan-list" class="u-full-width">
+            <col width="10%"></col>
+            <col width="10%"></col>
+            <col width="10%"></col>
+            <col width="10%"></col>
+            <col width="10%"width="5%"></col>
+            <col width="30%"></col>
+            <col width="20%"></col>
+            <thead>
+                <tr>
+                  <th class="event"></th>
+                  <th class="date">Dato</th>
+                  <th>Hvor</th>
+                  <th>Små barn</th>
+                  <th>Store barn</th>
+                  <th>Kommentar</th>
+                  <th class=actions></th>
+                </tr>
+              </thead>
+          </table>
+     </div>
+     <br/><br/>
+     <div id="lesson_count"></div>
+    </script>
+    
+    <!-- <select class="edit" class="edi">
+                    <option value="">- vanlig -</option>
+                    <% _(EVENTS).each(function(e) { %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% }); %>
+                </select>
+
+   -->
+    <script type="text/template" id="weekplan-template">
+          <td class="event">
+                <div class="label"><%= formattedEvent %></div>
+                <input class="edit w100 newEvent" value="<%= data.event %>">
+          </td>
+          <td class="date"><%=formattedDate %></td>
+          <td>
+                <div class="label">
+                  <%= data.where %>
+                </div>
+                <input class="edit w100 newWhere" value="<%= data.where %>">
+          </td>
+          <td>
+                <div class="label"><a href="classwork.html#small?id=<%=planId%>"><%= data.small_kids %></a></div>
+                <input class="edit w100 newSmall" value="<%= data.small_kids %>">
+          </td>
+          <td>
+                <div class="label"><a href="classwork.html#big?id=<%=planId%>"><%= data.big_kids %></a></div>
+                <input class="edit w100 newBig"  value="<%= data.big_kids %>">
+          </td>
+          <td>
+                <div class="label"><%= data.comments %></div>
+                <input class="edit w300 newComments" value="<%= data.comments %>">
+          </td>
+          <td class=actions><a href="#" id="editLink">Endre</a>
+              <a href="#" class="saveLink">Lagre</a>
+              <a href="#" class="cancelEditLink">Avbryt</a>
+          </td>
+    </script>
+    
+    <script type="text/template" id="stats-template">
+        <h5>Summert:</h5>
+        <table id="weekplan-list" width="200px">
+            <thead>
+                <tr>
+                  <th>Navn</th>
+                  <th class="center">Små</th>
+                  <th class="center">Store</th>
+                  <th class="center">Totalt</th>
+                 </tr>
+             </thead>
+             <tr><td>Lena</td>
+                <td class="center"><%= Lena_small %></td>
+                <td class="center"><%= Lena_big %></td>
+                <td class="center"><%= Lena_totale %></td>
+            </tr>
+            <tr><td>Olga</td>
+                <td class="center"><%= Olga_small %></td>
+                <td class="center"><%= Olga_big %></td>
+                <td class="center"><%= Olga_totale %></td>
+            </tr>
+            <tr><td>Ira</td>
+                <td class="center"><%= Ira_small %></td>
+                <td class="center"><%= Ira_big %></td>
+                <td class="center"><%= Ira_totale %></td>
+            </tr>
+        </table>
+    </script>
+
+</body>
+

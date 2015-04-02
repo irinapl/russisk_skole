@@ -1,0 +1,197 @@
+h6 {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.fridag {
+     background-color: #B8E4B1;
+}
+
+.fest {
+     background-color: antiquewhite;
+}
+
+.ferie {
+    background-color: #B8E4B1;
+}
+
+.done {
+    background-color: white;
+    color: lightgrey;
+}
+
+.done a{
+    color: lightgrey;
+}
+
+.nextLesson {
+  font-weight: bold;
+}
+
+#nextTimeDetails{
+ margin-bottom: 30px;
+ background-color: beige;
+ padding: 7px;
+ border-radius: 4px;
+}
+
+#nextTimeDetails h5:first-letter{
+    text-transform:capitalize;
+}
+
+.message{
+    background-color: darkseagreen;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    padding: 2px;
+    padding-left: 5px;
+    width: inherit;
+    margin: 15px 0px 15px 0px;
+    
+}
+
+.error{
+    background-color: palevioletred;
+}
+
+input:disabled(){
+    color: lightgrey;
+    
+}
+
+
+th {
+    padding-bottom: 10px;
+}
+
+tr {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+td {
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+li label, li div {
+  display: inline-block;
+}
+
+div.label {
+    padding-bottom: 1px;
+    padding-top: 1px;
+}
+td .event {
+  background: none;
+  border-bottom: 0px;
+}
+
+
+input.edit, select.edit{
+    display: none;
+}
+.w50{
+    width: 50px;
+}
+.w100{
+    width: 100px;
+}
+.w200{
+    width: 200px;
+}
+
+.w300{
+    width: 300px;
+}
+
+select, input {
+  height: 26px;
+  padding: 0px 0px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 2px;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.right {
+    right: 0px;
+}
+
+td.actions, td.actions. a {
+   white-space: nowrap;
+   width: auto;
+}
+
+div.actions, div.newContent {
+   display: inline;
+}
+
+.actions img {
+   margin-left: 5px;
+   margin-right: 5px;
+   text-decoration: underline;
+   cursor: pointer; 
+   cursor: hand;
+}
+
+th.date {
+  width: 130px
+}
+
+.saveLink, .cancelEditLink {
+   display: none;
+}
+
+.editing {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.editing .edit {
+    display: inline;
+}
+
+.cancelEditLink{
+   padding-left: 10px; 
+}
+
+.editing .label {
+    display: none;
+}
+
+.editing .editLink, .editing .remove {
+   display: none;
+}
+
+.editing  .saveLink, .editing .cancelEditLink {
+   display: inline;
+}
+
+#filters {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    
+    right: 0;
+    left: 0;
+}
+
+#filters li {
+    display: inline;
+}
+
+#filters li a {
+    color: #83756f;
+    margin: 2px;
+    text-decoration: none;
+}
+
+#filters li a.selected {
+    font-weight: bold;
+}
+
+
