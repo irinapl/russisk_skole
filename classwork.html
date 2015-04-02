@@ -20,7 +20,7 @@
   <script type="text/javascript" src="js/underscore.js"></script>
   <script type="text/javascript" src="js/classwork.js"></script>
 </head>
-
+                   
 
 <body>
     <div class="container" id="lessonPage">
@@ -89,25 +89,44 @@
              <div class="two columns">
                   + <select class="selectNewType" data-lesson="<%= lesson %>">
                         <option value="-">что?</option>
-                        <option value="book">Учебное пособие</option>
-                        <option value="readingbook">Книгу для чтения</option>
-                        <option value="movie">Фильм</option>
-                        <% if (lesson == "homework"){ %><option value="words">Часто используемые слова</option><% } %>
-                        <option value="audiobook">Аудиокниги</option>
-                        <option value="freetext">Другое</option>
+                        <option value="books" <%= selectedType == "books" ? "selected" : "" %> >Учебное пособие</option>
+                        <option value="readingbooks" <%= selectedType == "readingbooks" ? "selected" : "" %>>Книгу для чтения</option>
+                        <option value="movies" <%= selectedType == "movies" ? "selected" : "" %>>Фильм</option>
+                        <% if (lesson == "homework"){ %><option value="words" <%= selectedType == "words" ? "selected" : "" %>>Часто используемые слова</option><% } %>
+                        <option value="audiobooks" <%= selectedType == "audiobooks" ? "selected" : "" %>>Аудиокниги</option>
+                        <option value="freetext" <%= selectedType == "freetext" ? "selected" : "" %>>Другое</option>
                     </select>
              </div>
-              <div class="ten columns newContent" style="display:none">
-                    <select class="newSelectName"></select>
-                    
-                    <div class="help">Добавь свой текст:</div>
-                    <textarea class="newFreeText" value="" style="width: 300px;" />
-                    
-                    <div class="actions" style="display:none">
-                      <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
-                      <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
+             
+             <% if(selectedType != null){ %>
+                  <div class="ten columns newContent">
+                        
+                        <% if(details.resourceList != null){ %>
+                            <select class="newSelectName" >
+                                <% _(details.resourceList).each(function(resourc) { %>
+                                  <option value="<%= resourc.name %>"><%= resourc.name %></option>
+                                <% }); %>
+                            </select>
+                        <% } %>
+                        
+                        <% if(details.unit != null){ %>
+                            от <input type="text" class="newFromValue w50 input" value="<%= details.from %>" /> до <input type="text" class="newToValue w50 input" value="<%= details.to %>" />
+                            <%= (details.unit == "side") ? "страницы" : "задания" %>
+                        <% } %>
+                        
+                        <% if(details.link != null){ %>
+                            <a href="<%= details.link %>" target="_blank">Показать</a>
+                        <% } %>
+                        
+                        <div class="help">Добавь свой текст:</div>
+                        <textarea class="newFreeText" value="" style="width: 300px;" />
+
+                        <div class="actions">
+                          <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
+                          <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
+                      </div>
                   </div>
-              </div>
+              <% } %>
         </div>
           
     </script>
@@ -134,5 +153,8 @@
             </div>
     </script>
  
+
+
+                    
 </body>
 

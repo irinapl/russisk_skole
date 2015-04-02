@@ -227,7 +227,7 @@
       
       saveChanges: function() {
           this.save({
-              book: this.get("book"),
+              book: this.get("name"),
               unit: this.get("unit"),
               lastUsed: this.get("lastUsed"),
               countHomework: this.get("countHomework"),
