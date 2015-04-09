@@ -35,7 +35,7 @@
     
     
     <script type="text/template" id="lesson-template">
-       <div id="errorMessage" class="ten columns error"> </div>
+       <div id="errorMessage" class="error row"> </div>
        <div class="row">
             <input type="buton" class="button" id="enableEditAll" value="Изменить"/>
             <input type="buton" class="button" id="closeEditAll" value="Готово" style="display:none"/>
@@ -67,12 +67,31 @@
      </script>
     
     <script type="text/template" id="exercise-template">
-        <label>
-            <%= type %>        
-            <%= from %> - <%= to %>
-        
+        <span>
+            <% switch(type) {
+                case 'books':
+                    print('Учебник "' + name + '": ');
+                    print( (from == to) ? from : from + " - " + to);
+                    print( (unit == "side") ? " страницы" : "задания" );
+                    break;
+                    
+                case 'readingbooks':
+                    print('Читать рассказ: "' + name + '": ');
+                    break;
+                    
+                case 'movies':
+                    print('Смотреть фильм: ');
+                    print("<a href='" + link + "' target='_blank'>" + name + "</a>");
+                    break;
+                    
+                case 'audiobooks':
+                    print('Слушать рассказ: ');
+                    print("<a href='" + link + "' target='_blank'>" + name + "</a>");
+                    break;
+            } %>
+            
             <%= text %>
-        </label>
+        </span>
         <input class="edit w300 newText"  value="<%= !text ? "legg inn freetext" : text %>">
         
         <div class="actions" style="display:none">
@@ -107,7 +126,7 @@
                             <select class="newSelectName" onchange="javascript: updateDetails(this);" >
                                           
                                 <% _(details.resourceList).each(function(resource) { %>
-                                  <option value="<%= resource.name %>" data-link="<%=resource.link%>" 
+                                  <option value="<%= resource.objectId %>" data-link="<%=resource.link%>" 
                                   
                                        <% if(selectedType == "books"){
                                             var toAttrName = (lesson == "homework") ? "_toForHomework" : "_toForClasswork";
@@ -124,7 +143,7 @@
                         <% if(details.unit != null){ %>
                             от <input type="text" class="newFromValue w50 input" value="<%= details.from %>" />
                             до <input type="text" class="newToValue w50 input" value="<%= details.to %>" />
-                            <span class="newUnitValue"><%= details.unit %></span>
+                            <span class="newUnitValue"><%= (details.unit == "side") ? "страницы" : "задания" %></span>
                         <% } %>
                         
                         <% if(details.link != null){ %>
@@ -134,9 +153,9 @@
                         <div class="help">Добавь свой текст:</div>
                         <textarea class="newFreeText" value="" style="width: 300px;" />
 
-                        <div class="actions">
-                          <image src="css\images\add.png"    class="addNew"    data-lesson="<%= lesson %>"  title="Добавить"/>
-                          <image src="css\images\cancel.png" class="cancelNew" data-lesson="<%= lesson %>"  title="Не сохранять изменения"/>
+                        <div>
+                            <input class="button addNew" type="button" value="Добавить" data-lesson="<%= lesson %>"/>
+                            <input class="button cancelNew" type="button" value="X" data-lesson="<%= lesson %>"/>
                       </div>
                   </div>
               <% } %>
@@ -175,23 +194,19 @@
         var newBookUnitValue = selectedOption.getAttribute('data-unit');
         var newLinkValue = selectedOption.getAttribute('data-link');
         
-        console.log(newBookFromValue + " - " + newBookToValue + " " + newBookUnitValue);
+        var formattedUnitValue = (newBookUnitValue == "side") ? "страницы" : "задания";
         
-       var parentDiv = $(selectList).closest("div");
-       
-        
+        var parentDiv = $(selectList).closest("div");
+               
         if(newBookFromValue != undefined){
             parentDiv.find(".newFromValue").val(newBookFromValue);
             parentDiv.find(".newToValue").val(newBookToValue);
-            parentDiv.find(".newUnitValue").html(newBookUnitValue);
+            parentDiv.find(".newUnitValue").html(formattedUnitValue);
         }
         
         console.log(newLinkValue);
         if(newLinkValue != undefined){
-            
             parentDiv.find(".newPreviewLink").attr("href", newLinkValue)
-            
-            console.log(parentDiv.find(".newPreviewLink"));
         }
     }
                                          

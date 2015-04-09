@@ -66,6 +66,9 @@ div .help {
 
 .error{
     background-color: palevioletred;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-left: 5px;
 }
 
 input:disabled(){

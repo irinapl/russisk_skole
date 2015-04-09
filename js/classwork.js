@@ -102,7 +102,7 @@ $(function() {
 
           this.$el.html(_.template($("#lesson-template").html()));
           
-          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', "createNew", "loadContentForSelectNewType", "cancelNew");        
+          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', "createNew", "cancelNew", "loadContentForSelectNewType");        
           
           self._loadWeekPlan(function() { self.renderWeekPlan(); });
           self._loadAllOtherData();
@@ -253,25 +253,54 @@ $(function() {
       var lesson = e.target.getAttribute("data-lesson");
         
       if(!this.planId || !this.children || !lesson){
-      $("#errorMessage").html("Kan ikke legge til en oppgave. Noe mangler: planId = " + this.planId + ", barn=" + this.children + ", time=" + lesson);
-          return;
+            $("#errorMessage").html("Не удалось добавить задачу. Noe mangler: planId = " + this.planId + ", barn=" + this.children + ", time=" + lesson);
+            return;
       }
         
       var order = this.exercises.createOrderString(self.weekplan, lesson);
-
+    
+      var lessonDiv = $('#' + lesson);
+      var type = lessonDiv.find('.selectNewType option:selected').val();
+        
+      // resource details
+      var selectedResourceOption = lessonDiv.find('.newContent .newSelectName option:selected');    
+      var resourceName = selectedResourceOption.text();
+      var resourceId = selectedResourceOption.val();
+      var link = selectedResourceOption.attr("data-link");
+        
+      var from = lessonDiv.find('.newFromValue').val();
+      var to = lessonDiv.find('.newToValue').val();
+      var freetext = lessonDiv.find('.newFreeText').val();
+      
       this.exercises.create({
         planId: this.planId,
         children: this.children,
         order:   order,
-        lesson:  lesson
+        lesson:  lesson,
+        type:  type,
+        name:  resourceName,
+        resourceId:  resourceId,
+        from:  from,
+        to:  to,
+        link: link,
+        text: freetext
       });
         
-      //this.resetFilters();
+      this.cancelNew(e);
     },
       
     cancelNew: function(e) {
       var lesson = e.target.getAttribute("data-lesson");
-      $('#' + lesson + ' .selectNewType option[value=""]').attr('selected','selected');
+    
+      var lessonDiv = $('#' + lesson);
+      lessonDiv.find(' .selectNewType option[value="-"]').attr('selected','selected');
+      /*lessonDiv.find(' .newSelectName option[value=""]').attr('selected','selected');
+      lessonDiv.find(". newTreeFext").val("");
+      lessonDiv.find(". newFromValue").val("");
+      lessonDiv.find(". newToValue").val("");*/
+
+      lessonDiv.find(' .newContent').hide();
+      
     },
       
     render: function() {

@@ -309,10 +309,11 @@
   var Exercise = Parse.Object.extend("Exercise", {
       
       defaults: {
-          type: "book",
+          type: "",
           text: "",
           from: "",
-          to: ""
+          to: "",
+          unit: "",
       },
       
       saveChanges: function() {
