@@ -247,6 +247,17 @@
         return lastUsed + countHomework;
       },
       
+      
+      getDetailsForEditView: function(){
+          var lastUsed = parseInt(this.get("lastUsed"));
+          var from = lastUsed + 1;
+          var toForClasswork = lastUsed + this.get("countInClass");
+          var toForHomework = lastUsed + this.get("countHomework");
+          
+          return {from : from, toForClasswork : toForClasswork, toForHomework : toForHomework, unit : this.get("unit")};
+      },
+    
+      
       toJSON: function () {
           
           var json = Parse.Object.prototype.toJSON.call(this);
@@ -263,6 +274,16 @@
           if (!json["countHomework"]) {
             json["countHomework"] = this.defaults.countHomework;
           }
+          
+          var lastUsed = parseInt(this.get("lastUsed"));
+          var _from = lastUsed + 1;
+          var _toForClasswork = lastUsed + this.get("countInClass");
+          var _toForHomework = lastUsed + this.get("countHomework");
+          
+          json["_from"] = _from;
+          json["_toForClasswork"] = _toForClasswork;
+          json["_toForHomework"] = _toForHomework;
+          
           return json;
       }
   });

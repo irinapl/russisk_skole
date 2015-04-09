@@ -90,7 +90,8 @@ $(function() {
         "click #closeEditAll" : "closeEditAll",
         "click .addNew":          "createNew",
         "click .cancelNew":       "cancelNew",
-        "change .selectNewType":  "loadContentForSelectNewType"        
+        "change .selectNewType":  "loadContentForSelectNewType"
+        
     },
       
     initialize: function(planId, children) {
@@ -228,6 +229,26 @@ $(function() {
           $('#' + lesson + ' .newExercise').html(this.addNewTemplate(viewData));
     },
     
+      
+    updateNewResourceDetails: function(e){
+        
+          //$('#' + lesson + ' .newSelectName').
+        
+          resourceDetails.resourceList = self[selectedType].toJSON();
+          var firstSelectedOption = self[selectedType].first()
+
+          if(firstSelectedOption.get("link") != undefined){
+              resourceDetails.link = firstSelectedOption.get("link");
+          }
+
+          if(selectedType == "books"){
+              var lastUsed = parseInt(firstSelectedOption.get("lastUsed"));
+              resourceDetails.from = lastUsed + 1;
+              resourceDetails.to = lastUsed+ firstSelectedOption.get("countInClass");
+              resourceDetails.unit = firstSelectedOption.get("unit");
+          }
+    },
+      
     createNew: function(e) {
       var lesson = e.target.getAttribute("data-lesson");
         
@@ -250,8 +271,6 @@ $(function() {
       
     cancelNew: function(e) {
       var lesson = e.target.getAttribute("data-lesson");
-      //$('#' + lesson + ' .newExercise .actions').hide();
-      //$('#' + lesson + ' .newExercise .newContent').hide();
       $('#' + lesson + ' .selectNewType option[value=""]').attr('selected','selected');
     },
       
@@ -298,8 +317,8 @@ $(function() {
     addAll: function(collection, filter) {
       $('#enableEditAll').show();
       $('#closeEditAll').hide();
-      $('.newExercise').hide();
-      $('div.actions').hide();
+      //$('.newExercise').hide();
+      //$('div.actions').hide();
         
       $('#lesson1 .newExercise').html(this.addNewTemplate({ lesson: "lesson1", selectedType: null, details : null }));
       $('#lesson2 .newExercise').html(this.addNewTemplate({ lesson: "lesson2", selectedType: null, details: null }));

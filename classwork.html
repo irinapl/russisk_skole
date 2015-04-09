@@ -44,25 +44,25 @@
        <h6>1. Урок</h6>
        <div id="lesson1">
             <ul class="existing"></ul>
-            <div class="newExercise row"></div>
+            <div class="newExercise row" style="display:none"></div>
        </div>
        
        <h6>2. Урок</h6>
        <div id="lesson2">
             <ul class="existing"></ul>
-            <div class="newExercise row"></div>
+            <div class="newExercise row" style="display:none"></div>
        </div>
        
        <h6>3. Урок</h6>
        <div id="lesson3">
             <ul class="existing"></ul>
-            <div class="newExercise row"></div>
+            <div class="newExercise row" style="display:none"></div>
        </div>
        
        <h6>Домашнее задание</h6>
        <div id="homework">
             <ul class="existing"></ul>
-            <div class="newExercise row"></div>
+            <div class="newExercise row" style="display:none"></div>
        </div>
      </script>
     
@@ -92,7 +92,9 @@
                         <option value="books" <%= selectedType == "books" ? "selected" : "" %> >Учебное пособие</option>
                         <option value="readingbooks" <%= selectedType == "readingbooks" ? "selected" : "" %>>Книгу для чтения</option>
                         <option value="movies" <%= selectedType == "movies" ? "selected" : "" %>>Фильм</option>
-                        <% if (lesson == "homework"){ %><option value="words" <%= selectedType == "words" ? "selected" : "" %>>Часто используемые слова</option><% } %>
+                        <% if (lesson == "homework"){ %>
+                            <option value="words" <%= selectedType == "words" ? "selected" : "" %>>Часто используемые слова</option>
+                        <% } %>
                         <option value="audiobooks" <%= selectedType == "audiobooks" ? "selected" : "" %>>Аудиокниги</option>
                         <option value="freetext" <%= selectedType == "freetext" ? "selected" : "" %>>Другое</option>
                     </select>
@@ -102,20 +104,31 @@
                   <div class="ten columns newContent">
                         
                         <% if(details.resourceList != null){ %>
-                            <select class="newSelectName" >
-                                <% _(details.resourceList).each(function(resourc) { %>
-                                  <option value="<%= resourc.name %>"><%= resourc.name %></option>
+                            <select class="newSelectName" onchange="javascript: updateDetails(this);" >
+                                          
+                                <% _(details.resourceList).each(function(resource) { %>
+                                  <option value="<%= resource.name %>" data-link="<%=resource.link%>" 
+                                  
+                                       <% if(selectedType == "books"){
+                                            var toAttrName = (lesson == "homework") ? "_toForHomework" : "_toForClasswork";
+                                            print(" data-from='" + resource._from + "' ");
+                                            print(" data-to='" + resource[toAttrName] + "' ");
+                                            print(" data-unit='" + resource.unit + "' ");
+                                        } %>
+                                  
+                                  ><%= resource.name %></option>
                                 <% }); %>
                             </select>
                         <% } %>
                         
                         <% if(details.unit != null){ %>
-                            от <input type="text" class="newFromValue w50 input" value="<%= details.from %>" /> до <input type="text" class="newToValue w50 input" value="<%= details.to %>" />
-                            <%= (details.unit == "side") ? "страницы" : "задания" %>
+                            от <input type="text" class="newFromValue w50 input" value="<%= details.from %>" />
+                            до <input type="text" class="newToValue w50 input" value="<%= details.to %>" />
+                            <span class="newUnitValue"><%= details.unit %></span>
                         <% } %>
                         
                         <% if(details.link != null){ %>
-                            <a href="<%= details.link %>" target="_blank">Показать</a>
+                            <a href="<%= details.link %>" target="_blank" class="newPreviewLink">Показать</a>
                         <% } %>
                         
                         <div class="help">Добавь свой текст:</div>
@@ -154,6 +167,35 @@
     </script>
  
 
+<script>
+    function updateDetails(selectList){
+        var selectedOption = selectList.options[selectList.selectedIndex];
+        var newBookFromValue = selectedOption.getAttribute('data-from');
+        var newBookToValue = selectedOption.getAttribute('data-to');
+        var newBookUnitValue = selectedOption.getAttribute('data-unit');
+        var newLinkValue = selectedOption.getAttribute('data-link');
+        
+        console.log(newBookFromValue + " - " + newBookToValue + " " + newBookUnitValue);
+        
+       var parentDiv = $(selectList).closest("div");
+       
+        
+        if(newBookFromValue != undefined){
+            parentDiv.find(".newFromValue").val(newBookFromValue);
+            parentDiv.find(".newToValue").val(newBookToValue);
+            parentDiv.find(".newUnitValue").html(newBookUnitValue);
+        }
+        
+        console.log(newLinkValue);
+        if(newLinkValue != undefined){
+            
+            parentDiv.find(".newPreviewLink").attr("href", newLinkValue)
+            
+            console.log(parentDiv.find(".newPreviewLink"));
+        }
+    }
+                                         
+</script>
 
                     
 </body>

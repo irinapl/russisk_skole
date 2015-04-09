@@ -58,6 +58,7 @@
     </div>
     
     <script type="text/template" id="nexttime-template">
+       <div id="errormessage" class="error"></div>
        <div><h5>Следующая неделя: <a href="plan.html"><%=formattedDate %></a></h5></div>
        <h5>
         <%= (formattedEvent == undefined || formattedEvent == "") ? '' : formattedEvent +': '%>

@@ -25,6 +25,7 @@ $(function() {
           },
           error: function(collection, error, selv) {
             nextTimePlanView.render();
+            $("#errormessage").html("Произошла какая то ошибка. Свяжитесь со службой поддержки (Ирой) :)");
           }
         });
      },
