@@ -25,7 +25,7 @@
 <body>
     <div class="container" id="planPage">
         
-      <div class="eleven columns" style="margin-top: 5%">
+      <div class="" style="margin-top: 5%">
         <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
         <br>
         <h5>Годовой план 2015</h5>
@@ -38,22 +38,24 @@
     <script type="text/template" id="manage-weekplan-template">
        <div id="main">
          <table id="weekplan-list" class="u-full-width">
-            <col width="10%"></col>
+            <col width="10%" class="nonMobile"></col>
             <col width="15%"></col>
             <col width="15%"></col>
             <col width="15%"></col>
             <col width="10%"></col>
-            <col width="30%"></col>
-            <col width="5%"></col>
+            <col width="28%"></col>
+            <col width="7%" class="nonMobile"></col>
             <thead>
                 <tr>
-                  <th class="event"></th>
+                  <th class="event nonMobile"></th>
                   <th class="date">День</th>
                   <th>Где</th>
-                  <th>Младшие</th>
-                  <th>Старшие</th> 
+                  <th class="nonMobile">Младшие</th>
+                  <th class="onlyMobile">Мл.</th>
+                  <th class="nonMobile">Старшие</th>
+                  <th class="onlyMobile">Ст.</th>
                   <th>Комментарий</th>
-                  <th class=actions></th>
+                  <th class="actions nonMobile"></th>
                 </tr>
               </thead>
           </table>
@@ -61,17 +63,9 @@
      <br/><br/>
      <div id="lesson_count"></div>
     </script>
-    
-    <!-- <select class="edit" class="edi">
-                    <option value="">- vanlig -</option>
-                    <% _(EVENTS).each(function(e) { %>
-                      <option value="<%= e %>"><%= e %></option>
-                    <% }); %>
-                </select>
 
-   -->
     <script type="text/template" id="weekplan-template">
-          <td class="event">
+          <td class="event nonMobile">
                 <div class="label">
                     <% if(formattedEvent =="fridag"){
                             print("Выходной");
@@ -89,21 +83,34 @@
                 <div class="label">
                   <%= data.where %>
                 </div>
-                <input class="edit w100 newWhere" value="<%= data.where %>">
+                
+                <select class="edit newWhere">
+                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                      <option value="<%= e %>" <% if(data.where == e) print("selected") %>><%= e %></option>
+                    <% }); %>
+                </select>
           </td>
           <td>
                 <div class="label"><a href="classwork.html#small?id=<%=planId%>"><%= data.small_kids %></a></div>
-                <input class="edit w100 newSmall" value="<%= data.small_kids %>">
+                <select class="edit newSmall">
+                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                      <option value="<%= e %>" <% if(data.small_kids == e) print("selected") %>><%= e %></option>
+                    <% }); %>
+                </select>
           </td>
           <td>
                 <div class="label"><a href="classwork.html#big?id=<%=planId%>"><%= data.big_kids %></a></div>
-                <input class="edit w100 newBig"  value="<%= data.big_kids %>">
+                <select class="edit newBig">
+                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                      <option value="<%= e %>" <% if(data.big_kids == e) print("selected") %>><%= e %></option>
+                    <% }); %>
+                </select>
           </td>
           <td>
                 <div class="label"><%= data.comments %></div>
                 <input class="edit w300 newComments" value="<%= data.comments %>">
           </td>
-          <td class=actions>
+          <td class="actions nonMobile">
             <image src="css\images\edit.png" class="editLink" title="Изменить"/>
             <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
             <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>

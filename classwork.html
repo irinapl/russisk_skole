@@ -24,7 +24,7 @@
 
 <body>
     <div class="container" id="lessonPage">
-        <div class="eleven columns" style="margin-top: 5%">
+        <div  style="margin-top: 5%">
             <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
             <br/><br/>
             <div id="nextTimeDetails"></div>
@@ -37,7 +37,7 @@
     <script type="text/template" id="lesson-template">
        <div id="errorMessage" class="error row"> </div>
        <div class="row">
-            <input type="buton" class="button" id="enableEditAll" value="Изменить"/>
+            <input type="buton" class="button nonMobile" id="enableEditAll" value="Изменить"/>
             <input type="buton" class="button" id="closeEditAll" value="Готово" style="display:none"/>
         </div>
         
@@ -178,22 +178,22 @@
     </script>
 
     <script type="text/template" id="weekplan-template">
-            <h4>Занятие:  <%= (children == "small") ? "Младшая" : "Старшая" %></span></h4>        
+            <h4>Занятие:  <%= (children == "small") ? "Младшая" : "Старшая" %> группа</span></h4>        
             <h5>
                 <%= (weekplan.formattedEvent == undefined || weekplan.formattedEvent == "") ? '' : weekplan.formattedEvent +': '%>
                 <%= weekplan.data.comments == undefined ? '-'  : weekplan.data.comments %>
             </h5>
             <div class="row">
-                <div class="one columns"><label>День:</label></div>
-                <div class="ten columns"><%= weekplan.formattedDate %></div>
+                <div class="w150 columns"><label>День:</label></div>
+                <div class="w100 columns"><%= weekplan.formattedDate %></div>
             </div>
             <div class="row">
-                <div class="one columns"><label>Где:</label></div>
-                <div class="ten columns"><%= weekplan.data.where %></div>
+                <div class="w150 columns"><label>Где:</label></div>
+                <div class="w100 columns"><%= weekplan.data.where %></div>
             </div>
             <div class="row">
-                <div class="one columns"><label>Учитель: </label></div>
-                <div class="ten columns">
+                <div class="w150 columns"><label>Учитель: </label></div>
+                <div class="w100 columns">
                     <%= (children == "small") ? weekplan.data.small_kids : weekplan.data.big_kids %>
                 </div>
             </div>
