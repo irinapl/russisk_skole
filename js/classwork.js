@@ -1,3 +1,4 @@
+// http://backbonejs.org/#Collection-shift
 $(function() {
   Parse.$ = jQuery;
   
@@ -20,6 +21,7 @@ $(function() {
       
     tagName:  "li",
     template: _.template($('#exercise-template').html()),
+    className: "exerciseItem",
       
     events: {
       "click .editLink"   : "edit",
@@ -70,7 +72,7 @@ $(function() {
     
     remove: function(e) {
       this.model.destroy();
-      this.render();
+      $(this.el).remove();
     }
   });
 
@@ -88,6 +90,7 @@ $(function() {
     events: {
         "click #enableEditAll" : "enablePageEdit",
         "click #closeEditAll" : "closeEditAll",
+        "click .moveUp" :       "moveUp",
         "click .addNew":          "createNew",
         "click .cancelNew":       "cancelNew",
         "change .selectNewType":  "loadContentForSelectNewType"
@@ -102,7 +105,7 @@ $(function() {
 
           this.$el.html(_.template($("#lesson-template").html()));
           
-          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', "createNew", "cancelNew", "loadContentForSelectNewType");        
+          _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', 'moveUp', "createNew", "cancelNew", "loadContentForSelectNewType");        
           
           self._loadWeekPlan(function() { self.renderWeekPlan(); });
           self._loadAllOtherData();
@@ -225,14 +228,11 @@ $(function() {
         
           
           var viewData = { lesson: lesson, selectedType:selectedType, details: resourceDetails };
-          console.log(viewData);
           $('#' + lesson + ' .newExercise').html(this.addNewTemplate(viewData));
     },
     
       
     updateNewResourceDetails: function(e){
-        
-          //$('#' + lesson + ' .newSelectName').
         
           resourceDetails.resourceList = self[selectedType].toJSON();
           var firstSelectedOption = self[selectedType].first()
@@ -249,15 +249,40 @@ $(function() {
           }
     },
       
+      
+    moveUp: function(e) {
+        var lesson = e.target.getAttribute("data-lesson");
+        var exerciseItemClicked = $(e.target).parents('.exerciseItem');
+        
+        var idClicked = exerciseItemClicked.attr("id");
+        var idAbove = exerciseItemClicked.prev('.exerciseItem').attr("id");
+        if(idAbove == undefined){
+            console.log("Nothing above..");
+            return;
+        }
+        
+        var modelClicked = this.exercises.get(idClicked);
+        var modelAbove = this.exercises.get(idAbove);
+        
+        var orderValueClicked = modelClicked.get("order");
+        var orderValueFromAbove = modelAbove.get("order");
+        modelClicked.set("order", orderValueFromAbove);
+        modelAbove.set("order", orderValueClicked);
+        modelClicked.save();
+        modelAbove.save();
+        
+        // this.exercises.sort();
+        // state.set("reload", true);
+        this.enablePageEdit();
+    },
+                                     
     createNew: function(e) {
       var lesson = e.target.getAttribute("data-lesson");
         
-      if(!this.planId || !this.children || !lesson){
-            $("#errorMessage").html("Не удалось добавить задачу. Noe mangler: planId = " + this.planId + ", barn=" + this.children + ", time=" + lesson);
-            return;
-      }
-        
-      var order = this.exercises.createOrderString(self.weekplan, lesson);
+      var order = this.exercises.nextOrder();
+      console.log("next order: " + order);
+      var readableLessonName = this.exercises.createLessonName(self.weekplan, lesson);
+      console.log("readableLessonName: " + readableLessonName);
     
       var lessonDiv = $('#' + lesson);
       var type = lessonDiv.find('.selectNewType option:selected').val();
@@ -276,6 +301,7 @@ $(function() {
         planId: this.planId,
         children: this.children,
         order:   order,
+        lessonName: readableLessonName,
         lesson:  lesson,
         type:  type,
         name:  resourceName,
@@ -287,6 +313,7 @@ $(function() {
       });
         
       this.cancelNew(e);
+      this.enablePageEdit();
     },
       
     cancelNew: function(e) {
@@ -294,11 +321,6 @@ $(function() {
     
       var lessonDiv = $('#' + lesson);
       lessonDiv.find(' .selectNewType option[value="-"]').attr('selected','selected');
-      /*lessonDiv.find(' .newSelectName option[value=""]').attr('selected','selected');
-      lessonDiv.find(". newTreeFext").val("");
-      lessonDiv.find(". newFromValue").val("");
-      lessonDiv.find(". newToValue").val("");*/
-
       lessonDiv.find(' .newContent').hide();
       
     },
@@ -328,7 +350,7 @@ $(function() {
     // Add details about week plan (where, teacher, comments, ..)
     renderWeekPlan: function() {
       var weekPlanTemplate = _.template($("#weekplan-template").html());
-      $("#nextTimeDetails").html(weekPlanTemplate({ children: state.get("children") ,weekplan: weekplan.toJSON()} ));
+      $("#nextTimeDetails").html(weekPlanTemplate({ children: state.get("children"), weekplan: weekplan.toJSON()} ));
     },
     
     // Add one exercise row to ona of the lessons or homework
@@ -344,6 +366,8 @@ $(function() {
     },
     
     addAll: function(collection, filter) {
+        
+        console.log("addAll");
       $('#enableEditAll').show();
       $('#closeEditAll').hide();
       //$('.newExercise').hide();

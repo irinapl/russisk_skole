@@ -1,7 +1,7 @@
 h6 {
     font-weight: bold;
     font-size: 20px;
-    margin-top: 20px;
+    margin-top: 40px;
     margin-bottom: 5px;
 }
 
@@ -99,6 +99,11 @@ div.label {
     padding-bottom: 1px;
     padding-top: 1px;
 }
+
+label.normal{
+    font-weight: normal;
+}
+
 td .event {
   background: none;
   border-bottom: 0px;
@@ -114,7 +119,7 @@ input[type="number"], input[type="text"], input[type="url"], textarea, select {
   box-sizing: border-box;
 }
 
-input.edit, select.edit{
+input.edit, select.edit, label.edit{
     display: none;
 }
 .w50{
@@ -175,15 +180,21 @@ th.date {
   padding-bottom: 1px;
 }
 
+input.edit, textarea.edit{
+    display: none;
+}
+
+
 .editing .edit {
     display: inline;
 }
+
 
 .cancelEditLink{
    padding-left: 10px; 
 }
 
-.editing .label {
+.editing .label, .editing label {
     display: none;
 }
 
@@ -218,4 +229,7 @@ th.date {
     font-weight: bold;
 }
 
+.spaceBottom {
+    height: 100px;
+}
 

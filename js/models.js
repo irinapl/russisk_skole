@@ -307,7 +307,7 @@
     
  
   var Exercise = Parse.Object.extend("Exercise", {
-      
+      idAttribute: "objectId",
       defaults: {
           type: "",
           text: "",
@@ -355,18 +355,20 @@
         model: Exercise,
 
         render: function() {
-          console.log("Exercises render ");
           $(this.el).html(this.template(this.model.toJSON()));
-            
-          console.log("Exercises render: done ");
           return this;
         },
       
-        createOrderString: function(weekPlanDate, lesson) {            
+        nextOrder: function(weekPlanDate, lesson) {
+            if (!this.length) return 1;
+            return this.last().get('order') + 1;
+        },
+      
+        createLessonName: function(weekPlanDate, lesson) {
             var weekNumber = moment(weekPlanDate).week();
             var year = moment(weekPlanDate).year();
             return weekNumber + "_" + year + "_" + lesson;
-        },
+         },
 
         comparator: function(book) {
             return book.get('order');

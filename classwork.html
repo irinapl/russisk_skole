@@ -67,12 +67,18 @@
      </script>
     
     <script type="text/template" id="exercise-template">
-        <span>
-            <% switch(type) {
+        <% switch(type) {
                 case 'books':
-                    print('Учебник "' + name + '": ');
-                    print( (from == to) ? from : from + " - " + to);
-                    print( (unit == "side") ? " страницы" : "задания" );
+                    var fromToLabel = (from == to) ? from : from + " - " + to;
+                    print('Учебник "' + name + '", ');
+                    
+                    print( (unit == "side") ? "стр. " : "задание " );
+                    
+                    print( '<label class="normal">' + fromToLabel + '</label>');
+                    
+                    print( '<input class="edit w50 input newFrom" value="'  + from + '" /> <label class="edit normal">-</label> ');
+                    print( '<input class="edit w50 input newTo" value="'  + to + '" />');
+
                     break;
                     
                 case 'readingbooks':
@@ -89,25 +95,23 @@
                     print("<a href='" + link + "' target='_blank'>" + name + "</a>");
                     break;
             } %>
-            
-            <%= text %>
-        </span>
-        <input class="edit w300 newText"  value="<%= !text ? "legg inn freetext" : text %>">
+        <label class="normal"><%= text.replace('\\n', '<br/>') %></label>
         
+        <textarea class="edit newText" rows="1" placeholder="Добавь текст"><%=text%></textarea>
         <div class="actions" style="display:none">
+          <image src="css\images\arrowUp.png" class="moveUp"/>
           <image src="css\images\edit.png"   class="editLink" title="Изменить"/>
           <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
           <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
           <image src="css\images\trash.png"  class="remove" title="Удалить"/>
-       </div>
-
+       </dv>
     </script>
 
     <script type="text/template" id="add-exercise-template">
           <div class="row">
              <div class="two columns">
-                  + <select class="selectNewType" data-lesson="<%= lesson %>">
-                        <option value="-">что?</option>
+                  <select class="selectNewType" data-lesson="<%= lesson %>">
+                        <option value="-">+ что?</option>
                         <option value="books" <%= selectedType == "books" ? "selected" : "" %> >Учебное пособие</option>
                         <option value="readingbooks" <%= selectedType == "readingbooks" ? "selected" : "" %>>Книгу для чтения</option>
                         <option value="movies" <%= selectedType == "movies" ? "selected" : "" %>>Фильм</option>
@@ -151,7 +155,7 @@
                         <% } %>
                         
                         <div class="help">Добавь свой текст:</div>
-                        <textarea class="newFreeText" value="" style="width: 300px;" />
+                        <textarea class="newFreeText" value=""  />
 
                         <div>
                             <input class="button addNew" type="button" value="Добавить" data-lesson="<%= lesson %>"/>
@@ -212,6 +216,7 @@
                                          
 </script>
 
-                    
+    
+<div class="spaceBottom"> </div>
 </body>
 
