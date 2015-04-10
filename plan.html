@@ -26,7 +26,7 @@
     <div class="container" id="planPage">
         
       <div class="eleven columns" style="margin-top: 5%">
-        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< Tilbake" />
+        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
         <br>
         <h5>Годовой план 2015</h5>
         <div id="annualPlan" class="content"></div>
@@ -39,20 +39,20 @@
        <div id="main">
          <table id="weekplan-list" class="u-full-width">
             <col width="10%"></col>
+            <col width="15%"></col>
+            <col width="15%"></col>
+            <col width="15%"></col>
             <col width="10%"></col>
-            <col width="10%"></col>
-            <col width="10%"></col>
-            <col width="10%"width="5%"></col>
             <col width="30%"></col>
-            <col width="20%"></col>
+            <col width="5%"></col>
             <thead>
                 <tr>
                   <th class="event"></th>
-                  <th class="date">Dato</th>
-                  <th>Hvor</th>
-                  <th>Små barn</th>
-                  <th>Store barn</th>
-                  <th>Kommentar</th>
+                  <th class="date">День</th>
+                  <th>Где</th>
+                  <th>Младшие</th>
+                  <th>Старшие</th> 
+                  <th>Комментарий</th>
                   <th class=actions></th>
                 </tr>
               </thead>
@@ -72,8 +72,17 @@
    -->
     <script type="text/template" id="weekplan-template">
           <td class="event">
-                <div class="label"><%= formattedEvent %></div>
-                <input class="edit w100 newEvent" value="<%= data.event %>">
+                <div class="label">
+                    <% if(formattedEvent =="fridag"){
+                            print("Выходной");
+                       } else if(formattedEvent =="fest"){
+                           print("Праздник");  
+                       }%>
+                </div>
+                <select class="edit w100 newEvent" value="<%= data.event %>">
+                        <option value="fridag" <% if(data.event =="fridag") print("selected") %> >Выходной</option>
+                        <option value="fest" <% if(data.event =="fest") print("selected") %> >Праздник</option>
+                </select>
           </td>
           <td class="date"><%=formattedDate %></td>
           <td>
@@ -94,9 +103,10 @@
                 <div class="label"><%= data.comments %></div>
                 <input class="edit w300 newComments" value="<%= data.comments %>">
           </td>
-          <td class=actions><a href="#" id="editLink">Endre</a>
-              <a href="#" class="saveLink">Lagre</a>
-              <a href="#" class="cancelEditLink">Avbryt</a>
+          <td class=actions>
+            <image src="css\images\edit.png" class="editLink" title="Изменить"/>
+            <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
+            <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
           </td>
     </script>
     

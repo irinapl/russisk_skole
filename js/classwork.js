@@ -103,8 +103,6 @@ $(function() {
           this.planId = planId;
           this.children = children;
 
-          this.$el.html(_.template($("#lesson-template").html()));
-          
           _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', 'moveUp', "createNew", "cancelNew", "loadContentForSelectNewType");        
           
           self._loadWeekPlan(function() { self.renderWeekPlan(); });
@@ -271,8 +269,7 @@ $(function() {
         modelClicked.save();
         modelAbove.save();
         
-        // this.exercises.sort();
-        // state.set("reload", true);
+        this.exercises.sort();
         this.enablePageEdit();
     },
                                      
@@ -326,7 +323,7 @@ $(function() {
     },
       
     render: function() {
-         this.delegateEvents();
+         //this.delegateEvents();
          return this;
     },
       
@@ -366,8 +363,8 @@ $(function() {
     },
     
     addAll: function(collection, filter) {
-        
-        console.log("addAll");
+      this.$el.html(_.template($("#lesson-template").html()));
+      console.log("addAll. Total size: + " + this.exercises.size());
       $('#enableEditAll').show();
       $('#closeEditAll').hide();
       //$('.newExercise').hide();

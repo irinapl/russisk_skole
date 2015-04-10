@@ -67,6 +67,8 @@
      </script>
     
     <script type="text/template" id="exercise-template">
+        
+        
         <% switch(type) {
                 case 'books':
                     var fromToLabel = (from == to) ? from : from + " - " + to;
@@ -95,16 +97,23 @@
                     print("<a href='" + link + "' target='_blank'>" + name + "</a>");
                     break;
             } %>
-        <label class="normal"><%= text.replace('\\n', '<br/>') %></label>
+        <span class="label normal"><%= text.replace(/(?:\r\n|\r|\n)/g, '<br />') %></span>
         
-        <textarea class="edit newText" rows="1" placeholder="Добавь текст"><%=text%></textarea>
         <div class="actions" style="display:none">
           <image src="css\images\arrowUp.png" class="moveUp"/>
           <image src="css\images\edit.png"   class="editLink" title="Изменить"/>
           <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
           <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
-          <image src="css\images\trash.png"  class="remove" title="Удалить"/>
-       </dv>
+          <image src="css\images\trash.png"   title="Удалить" onclick="$(this).next('.deleteConfirm').show();"/>
+          <div class="deleteConfirm" style="display:none">Удалить? 
+            <span class="link remove">да!</span>    
+            <span class="link" onclick="$(this).parents('.deleteConfirm').hide();">нет</a></span>
+          </div>
+        </div>
+        
+        <textarea class="edit newText" placeholder="Добавь текст"><%=text%></textarea>
+        
+        
     </script>
 
     <script type="text/template" id="add-exercise-template">
@@ -121,6 +130,7 @@
                         <option value="audiobooks" <%= selectedType == "audiobooks" ? "selected" : "" %>>Аудиокниги</option>
                         <option value="freetext" <%= selectedType == "freetext" ? "selected" : "" %>>Другое</option>
                     </select>
+             </div>
              </div>
              
              <% if(selectedType != null){ %>
@@ -163,7 +173,7 @@
                       </div>
                   </div>
               <% } %>
-        </div>
+       
           
     </script>
 

@@ -84,6 +84,7 @@ th {
 tr {
     padding-top: 4px;
     padding-bottom: 4px;
+    vertical-align: top;
 }
 
 td {
@@ -110,7 +111,7 @@ td .event {
 }
 
 input[type="number"], input[type="text"], input[type="url"], textarea, select {
-  height: 26px;
+  min-height: 26px;
   padding: 6px 10px;
   background-color: #fff;
   border: 1px solid #D1D1D1;
@@ -118,6 +119,9 @@ input[type="number"], input[type="text"], input[type="url"], textarea, select {
   box-shadow: none;
   box-sizing: border-box;
 }
+
+
+
 
 input.edit, select.edit, label.edit{
     display: none;
@@ -167,6 +171,14 @@ div.actions, div.newContent {
    cursor: hand;
 }
 
+span.link{
+   text-decoration: underline;
+   cursor: pointer; 
+   cursor: hand;
+   color: blue;
+   padding: 0px 10px;
+}
+
 th.date {
   width: 130px
 }
@@ -189,12 +201,15 @@ input.edit, textarea.edit{
     display: inline;
 }
 
+.editing textarea.edit {
+    display: block;
+}
 
 .cancelEditLink{
    padding-left: 10px; 
 }
 
-.editing .label, .editing label {
+.editing .label, .editing label, .editing span.label {
     display: none;
 }
 

@@ -26,9 +26,9 @@
     <div class="container" id="bookPage">
         
       <div class="eleven columns" style="margin-top: 5%">
-        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< Tilbake" />
+        <input type="buton" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
         <br>
-        <h5>Bøker 2015</h5>
+        <h5>Учебные пособия 2015</h5>
         <div id="books" class="content"></div>
           
       </div>
@@ -38,45 +38,45 @@
     <script type="text/template" id="manage-books-template">
        <div id="main">
          <table id="book-list" class="u-full-width">
-            <col width="5%"></col>
-            <col width="30%"></col>
+            <col width="10%"></col>
+            <col width="40%"></col>
+            <col width="15%"></col>
             <col width="15%"></col>
             <col width="10%"></col>
             <col width="10%"></col>
-            <col width="20%"></col>
             <thead>
                 <tr>
-                  <th class="event">Barn</th>
-                  <th class="date">Bok</th>
-                  <th>Siste utført</th>
-                  <th>Antall oppg.<br/>på skolen</th>
-                  <th>Antall oppg.<br/>hjemme</th>
+                  <th class="event">Группа</th>
+                  <th class="date">Книга</th> 
+                  <th>Последнее</th>
+                  <th>в школе</th>
+                  <th>дома</th>
                   <th class=actions></th>
                 </tr>
               </thead>
           </table>
      </div>
     </script>
-    
+
     <script type="text/template" id="book-template">
           <td class="event">
                 <%  if (children =="small") 
-                        print("Små"); 
+                        print("Младшие"); 
                     else
-                        print("Store"); %>
+                        print("Старшие"); %>
           </td>
           <td class="date"><div class="label"><%=name %></div>
             <input class="edit w300 newBook" value="<%= name %>">
           </td>
           <td>
                 <div class="label">
-                  <%= unit %>
+                  <%= (unit =="side")? "страница": "задание" %>
                   <%= lastUsed %>
                 </div>
-                <div class="input">
+                <div class="input">  
                 <select class="edit w100 newUnit" value="<%= unit %>">
-                    <option value="side" <% if(unit =="side") print("selected") %> >side</option>
-                    <option value="oppgave" <% if(unit =="oppgave") print("selected") %> >oppgave</option>
+                    <option value="side" <% if(unit =="side") print("selected") %> >страница</option>
+                    <option value="oppgave" <% if(unit =="oppgave") print("selected") %> >задание</option>
                 </select>
                 <input class="edit w50 newLastUsed" value="<%= lastUsed %>">
                 </div>
@@ -99,9 +99,9 @@
                 </select>
           </td>
           <td class=actions>
-              <a href="#" class="editLink">Endre</a>
-              <a href="#" class="saveLink">Lagre</a>
-              <a href="#" class="cancelEditLink">Avbryt</a>
+              <image src="css\images\edit.png" class="editLink" title="Изменить"/>
+              <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
+              <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
           </td>
     </script>
 </body>
