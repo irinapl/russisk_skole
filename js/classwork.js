@@ -113,11 +113,6 @@ $(function() {
           this.exercises.bind('reset',   this.addAll);
           this.exercises.bind('all',     this.render);
         
-          this.exercises = new Exercises;
-          this.exercises.bind('add',     this.addOne);
-          this.exercises.bind('reset',   this.addAll);
-          this.exercises.bind('all',     this.render);
-        
           this.exercises.query = new Parse.Query(Exercise); 
           this.exercises.query.equalTo("planId", planId);
           this.exercises.query.equalTo("children", children);

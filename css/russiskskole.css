@@ -268,3 +268,18 @@ input.edit, textarea.edit{
 @media (min-width: 500px) {
     .content .onlyMobile{display:none;}
 }
+
+div.homework-row {
+   padding: 7px;
+   vertical-align: middle;
+}
+
+div.homework-row img.toggleDone{
+   margin-right: 5px;
+   vertical-align: middle;
+   background-image: "images\unckecked.png"
+}
+
+div.homework-row div, div.homework-row label{
+    display: inline;
+}

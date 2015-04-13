@@ -74,6 +74,7 @@
                        }%>
                 </div>
                 <select class="edit w100 newEvent" value="<%= data.event %>">
+                        <option value="" >занятие</option>
                         <option value="fridag" <% if(data.event =="fridag") print("selected") %> >Выходной</option>
                         <option value="fest" <% if(data.event =="fest") print("selected") %> >Праздник</option>
                 </select>
