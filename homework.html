@@ -26,7 +26,8 @@
 <body>
     <div class="container">
         <div style="margin-top: 5%">
-            <h4>Домашнее задание на <span id="nextLessonDate"></h4>
+            
+            
             <div id="nextTime" class="content">
                 <div id="homeworkStatus"></div>
             </div>
@@ -34,13 +35,16 @@
     </div>
         
     <script type="text/template" id="homework-manage-template">
+        <h4>Привет, <span id="childName"></h4>
+        <h4>Домашнее задание на <span id="nextLessonDate"></h4>
+        
         <div id="message"></div>
         <div id="exercises-list"></ul>
     </script>
     
     <script type="text/template" id="homework-template">
         
-        <img src="css\images\checked.png" class="toggleDone" data-exerciseId="<%=objectId %>"/>
+        <img src="css\images\checked.png" class="toggleDone" data-exerciseId="<%=objectId %>" />
         
         <% switch(type) {
                 case 'books':

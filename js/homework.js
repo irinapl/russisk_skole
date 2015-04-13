@@ -43,9 +43,9 @@ $(function() {
     toggleDone: function(e) {
       var exerciseId = e.target.getAttribute("data-exerciseId");
       console.log("mark as done!!: " + exerciseId);
+    
+      var doneBy = this.model.setDoneBy(this.childName);
         
-      toggleDone
-      //this.model.save({done: !this.get("done")});
     }
 
   });
@@ -85,6 +85,9 @@ $(function() {
       },
     
     render: function() {
+       console.log(state.get("childName"));
+       $("#childName").html( state.get("childName") ); 
+       
        this.delegateEvents();
        return this;
     },
@@ -133,11 +136,24 @@ $(function() {
     },
       
     lessonSmall: function(name) {
-      state.set({ filter: "all", children: "small", childName: name});
+       var childName="";
+
+       switch(name){
+        case "william": childName = "Виллиам"; break;
+        case "dina": childName = "Дина"; break;
+        case "lillian": childName = "Лиллиан"; break;
+       }
+      state.set({ filter: "all", children: "small", childName: childName});
     },
       
-    lessonBig: function(planId) {
-      state.set({ filter: "all", children: "big", childName: name});
+    lessonBig: function(name) {
+      var childName="";
+      switch(name){
+        case "marius": childName = "Мариус"; break;
+        case "andre": childName = "Андрей"; break;
+        case "lilja": childName = "Лилия"; break;
+      }
+      state.set({ filter: "all", children: "big", childName: childName});
     }
   });
 

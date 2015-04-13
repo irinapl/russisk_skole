@@ -313,7 +313,17 @@
           text: "",
           from: "",
           to: "",
-          unit: "",
+          unit: ""
+      },
+      
+      setDoneBy: function(childName){
+         var doneBy = this.get("doneBy");
+         
+         
+         doneBy.find(childName);
+          
+          
+         //this.save({ doneBy: this.get("doneBy")};
       },
       
       saveChanges: function() {
