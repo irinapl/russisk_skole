@@ -277,8 +277,7 @@ div.homework-row {
 div.homework-row img.toggleDone{
    margin-right: 5px;
    vertical-align: middle;
-   cursor: pointer; 
-   cursor: hand;
+   
 }
 
 div.homework-row div, div.homework-row label{

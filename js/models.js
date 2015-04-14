@@ -3,6 +3,9 @@
 //========================== WEEK PLAN ===============================
     
   var WeekPlan = Parse.Object.extend("WeekPlan", {
+      
+      idAttribute: "objectId",
+      
       saveChanges: function() {
           this.save({
               comments: this.get("comments"),
@@ -28,9 +31,9 @@
         var rowDate = moment(this.get("date"));
         return moment(rowDate).isBefore(today);
       },
-      
+            
       isInTheFuture: function(){
-        return moment(this.get('date')).isAfter( new Date());;
+        return moment(this.get('date')).isAfter( new Date());
       },
       
       toJSON: function () {
@@ -82,6 +85,13 @@
                 return nextTimeAsArray[0];
             }
             return null;
+        },
+      
+        selectPastLessons: function(color) {
+            filtered = this.filter(function(plan) {
+                return plan.isPast();
+            });
+            return new WeekPlans(filtered);
         },
       
         remaining: function() {

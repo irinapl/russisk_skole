@@ -30,7 +30,7 @@ $(function() {
       
       var modelAsJson = this.model.toJSON();
       //$(this.el).addClass(modelAsJson["children"]);
-        console.log(modelAsJson);
+      
       $(this.el).attr("id", this.model.id);
       $(this.el).html(this.template(modelAsJson));  
       
@@ -44,7 +44,7 @@ $(function() {
       var exerciseId = e.target.getAttribute("data-exerciseId");
       console.log("mark as done!!: " + exerciseId);
     
-      var doneBy = this.model.setDoneBy(this.childName);
+      //var doneBy = this.model.setDoneBy(this.childName);
         
     }
 
@@ -62,6 +62,40 @@ $(function() {
 
           this.childName = state.get("childName");
           this.children = state.get("children");
+        
+          
+          /*var weekplans = new WeekPlans;
+          weekplans.query = new Parse.Query(WeekPlan);
+          weekplans.fetch({
+              success: function(collection) {
+                  var pastLessons = collection.selectPastLessons();
+                  var lastLessonId = pastLessons.last().id;
+                  console.log("=================");
+                  console.log(pastLessons.pluck("planId"));
+              },
+              error: function(collection, error) {
+                // STOP HERE!!
+              }
+            });*/
+        
+            var exerciseQuery = new Parse.Query(Exercise);
+            exerciseQuery.equalTo("lesson", "homework");
+            exerciseQuery.equalTo("children", this.children);
+            
+            var planQuery = new Parse.Query(WeekPlan);
+            planQuery.matchesKeyInQuery("objectId", "planId", exerciseQuery);
+            planQuery.find({ 
+              success: function(results) {
+                  console.log("*****************");
+                  console.log(results);
+                  
+                  for (var i = 0; i < results.length; i++) { 
+                          var object = results[i];
+                           console.log(object.toJSON());
+                        }
+                  }
+            });
+        
         
           this.exercises = new Exercises;
         
@@ -85,7 +119,6 @@ $(function() {
       },
     
     render: function() {
-       console.log(state.get("childName"));
        $("#childName").html( state.get("childName") ); 
        
        this.delegateEvents();
@@ -112,6 +145,8 @@ $(function() {
 
     initialize: function() {
       state.on("change", this.render, this);
+        
+      
         
       //TODO: get current homework ID
       this.planId = "1Pnx4vtYod";
