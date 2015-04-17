@@ -283,3 +283,11 @@ div.homework-row img.toggleDone{
 div.homework-row div, div.homework-row label{
     display: inline;
 }
+
+div img.done: {
+    display: inline;
+}
+
+div.done img.notDone: {
+    display: none;
+}

@@ -22,18 +22,31 @@ $(function() {
     },
 
     initialize: function() {
-      _.bindAll(this, 'toggleDone');
+      _.bindAll(this, 'render', 'toggleDone');
       this.model.bind('change', this.render);
      },
       
     render: function() {
       
       var modelAsJson = this.model.toJSON();
-      //$(this.el).addClass(modelAsJson["children"]);
-      
+           
       $(this.el).attr("id", this.model.id);
       $(this.el).html(this.template(modelAsJson));  
       
+      //var checkBoxImage = jQuery("img.toggleDone:first").get(0);
+        
+      //console.log(checkBoxImage);
+        
+      if(this.model.isDoneBy(state.get("childName"))){
+        $(this.el).addClass("done");
+        //checkBoxImage.setAttribute("src", "css\\images\\unchecked.png");
+      }else{
+        $(this.el).removeClass("done");
+        //checkBoxImage.setAttribute("src", "css\\images\\checked.png");
+      }
+        
+      
+        
       this.delegateEvents();
         
       return this;
@@ -42,10 +55,7 @@ $(function() {
     // Switch this view into `"editing"` mode, displaying the input field.
     toggleDone: function(e) {
       var exerciseId = e.target.getAttribute("data-exerciseId");
-      console.log("mark as done!!: " + exerciseId);
-    
-      //var doneBy = this.model.setDoneBy(this.childName);
-        
+      var doneBy = this.model.setDoneBy(state.get("childName"));
     }
 
   });
@@ -86,12 +96,12 @@ $(function() {
             planQuery.matchesKeyInQuery("objectId", "planId", exerciseQuery);
             planQuery.find({ 
               success: function(results) {
-                  console.log("*****************");
-                  console.log(results);
+                  //console.log("*****************");
+                  //console.log(results);
                   
                   for (var i = 0; i < results.length; i++) { 
                           var object = results[i];
-                           console.log(object.toJSON());
+                           //console.log(object.toJSON());
                         }
                   }
             });
@@ -126,6 +136,7 @@ $(function() {
     },
       
     addOne: function(exercise) {
+    
       var view = new HomeworkView( {model: exercise} );
       var renderedData = view.render().el;
       $("#exercises-list").append( renderedData );
@@ -149,7 +160,7 @@ $(function() {
       
         
       //TODO: get current homework ID
-      this.planId = "1Pnx4vtYod";
+      this.planId = "HuprFWBDRy";
       
       this.render();
     },

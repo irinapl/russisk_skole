@@ -326,14 +326,53 @@
           unit: ""
       },
       
-      setDoneBy: function(childName){
+      isDoneBy: function(childName){
          var doneBy = this.get("doneBy");
+         if(doneBy == undefined){
+            return false;
+         }
+         return _.contains(doneBy, childName);
+      },
+      
+      setDoneBy: function(childName){
          
+         var doneBy = this.get("doneBy");
+         if(doneBy == undefined){
+            doneBy = [];
+         }
+        
+         var alreadyDone = _.contains(doneBy, childName);
          
-         doneBy.find(childName);
+         console.log("doneBy = " + doneBy +  ", already done=" + alreadyDone);
+         //var updatedDoneBy = _.clone(doneBy);
+         //updatedDoneBy.pop();
+
+           
           
+          if(alreadyDone){
+            doneBy = _.without(doneBy, childName);
+            //doneBy.without(childName);
+            //doneBy = _.filter(doneBy, function(name){ return name == childName; });
+          }else{
+            doneBy.push(childName);
+          }
           
-         //this.save({ doneBy: this.get("doneBy")};
+          //this.set('doneBy', updatedDoneBy);
+           
+          console.log("updated = " + doneBy);
+          
+          var updatedDoneBy = _.clone(doneBy);
+          console.log("updatedDoneBy = " + updatedDoneBy);
+          
+          //this.set("doneBy", updatedDoneBy);
+          //this.save({doneBy: updatedDoneBy});
+          //this.trigger("change");
+          //this.trigger("change:doneBy");
+          
+          this.set("doneBy", updatedDoneBy);
+          this.save();
+          
+          console.log("SAVED!! ");
       },
       
       saveChanges: function() {
@@ -343,7 +382,8 @@
               link: this.get("link"),
               text: this.get("text"),
               from: this.get("from"),
-              to: this.get("to")
+              to: this.get("to"),
+              doneBy: this.get("doneBy")
           });
       },
       
