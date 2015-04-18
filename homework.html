@@ -44,7 +44,8 @@
     
     <script type="text/template" id="homework-template">
         
-        <img src="css\images\unchecked.png" class="toggleDone" data-exerciseId="<%=objectId %>"/>
+        <img src="css\images\unchecked.png" class="toggleDone unchecked" data-exerciseId="<%=objectId %>" width="24" height="24"/>
+        <img src="css\images\checked.png" class="toggleDone checked" data-exerciseId="<%=objectId %>" width="24" height="24"/>
         
         <% switch(type) {
                 case 'books':

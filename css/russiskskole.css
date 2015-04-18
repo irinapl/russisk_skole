@@ -284,10 +284,17 @@ div.homework-row div, div.homework-row label{
     display: inline;
 }
 
-div img.done: {
-    display: inline;
+div.homework-row.todo img.toggleDone.checked{
+   display: none;
 }
 
-div.done img.notDone: {
-    display: none;
+div.homework-row.done img.toggleDone.unchecked{
+   display: none;
 }
+
+
+
+
+
+
+

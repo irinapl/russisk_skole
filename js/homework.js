@@ -33,21 +33,16 @@ $(function() {
       $(this.el).attr("id", this.model.id);
       $(this.el).html(this.template(modelAsJson));  
       
-      //var checkBoxImage = jQuery("img.toggleDone:first").get(0);
-        
-      //console.log(checkBoxImage);
+            
+      this.delegateEvents();
         
       if(this.model.isDoneBy(state.get("childName"))){
         $(this.el).addClass("done");
-        //checkBoxImage.setAttribute("src", "css\\images\\unchecked.png");
+        $(this.el).removeClass("todo");
       }else{
         $(this.el).removeClass("done");
-        //checkBoxImage.setAttribute("src", "css\\images\\checked.png");
+        $(this.el).addClass("todo");
       }
-        
-      
-        
-      this.delegateEvents();
         
       return this;
     },
@@ -160,7 +155,7 @@ $(function() {
       
         
       //TODO: get current homework ID
-      this.planId = "HuprFWBDRy";
+      this.planId = "zPuXgWnCYM";
       
       this.render();
     },
