@@ -44,6 +44,8 @@ $(function() {
         $(this.el).addClass("todo");
       }
         
+        console.log(modelAsJson);
+        
       return this;
     },
       
@@ -68,40 +70,6 @@ $(function() {
           this.childName = state.get("childName");
           this.children = state.get("children");
         
-          
-          /*var weekplans = new WeekPlans;
-          weekplans.query = new Parse.Query(WeekPlan);
-          weekplans.fetch({
-              success: function(collection) {
-                  var pastLessons = collection.selectPastLessons();
-                  var lastLessonId = pastLessons.last().id;
-                  console.log("=================");
-                  console.log(pastLessons.pluck("planId"));
-              },
-              error: function(collection, error) {
-                // STOP HERE!!
-              }
-            });*/
-        
-            var exerciseQuery = new Parse.Query(Exercise);
-            exerciseQuery.equalTo("lesson", "homework");
-            exerciseQuery.equalTo("children", this.children);
-            
-            var planQuery = new Parse.Query(WeekPlan);
-            planQuery.matchesKeyInQuery("objectId", "planId", exerciseQuery);
-            planQuery.find({ 
-              success: function(results) {
-                  //console.log("*****************");
-                  //console.log(results);
-                  
-                  for (var i = 0; i < results.length; i++) { 
-                          var object = results[i];
-                           //console.log(object.toJSON());
-                        }
-                  }
-            });
-        
-        
           this.exercises = new Exercises;
         
           _.bindAll(this, 'addOne', 'addAll', 'render');        
@@ -111,7 +79,13 @@ $(function() {
         
           
           this.exercises.query = new Parse.Query(Exercise);
-          this.exercises.query.equalTo("planId", planId);
+        
+          //if(planId != undefined && planId != ""){
+            this.exercises.query.equalTo("planId", planId);
+          //}else{
+            //this.exercises.query.lessThan("lessonDate", new Date());
+         // }
+          
           this.exercises.query.equalTo("lesson", "homework");
           this.exercises.query.equalTo("children", this.children);
           this.exercises.query.find({
@@ -152,10 +126,8 @@ $(function() {
     initialize: function() {
       state.on("change", this.render, this);
         
-      
-        
       //TODO: get current homework ID
-      this.planId = "zPuXgWnCYM";
+      this.planId = "zPuXgWnCYM"; 
       
       this.render();
     },

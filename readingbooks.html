@@ -18,6 +18,8 @@
   <script type="text/javascript" src="js/models.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/underscore.js"></script>
+    
+  <meta http-equiv="refresh" content="1800" >
 </head>
 
 
@@ -27,16 +29,26 @@
       <div class="eleven columns" style="margin-top: 5%">
         <input type="button" class="button" onclick="javascript: window.location.href='index.html'" value="<< На главную" />
         <br>
-        <h5>Lesebøker</h5>
+        <h3>Книги для чтения</h3>
         <div id="annualPlan" class="content">
                         
-            <h6>Store barn</h6>
+            <h6>Старшая группа</h6>
             <div id="listBig"></div>
+            <div class="spaceBottom"/>
+            <div id="addBig" >
+                <textarea placeholder="Добавить книги (одна книга на линии)" class="newBooks"></textarea><br/>
+                <input type="button" class="button" value="ОК" data-children="big" onclick="parseNewBooksBig(this)"/>
+            </div>
             
             <h5></h5>
             
-            <h6>Små barn</h6>
+            <h6>Младшая группа</h6>
             <div id="listSmall"></div>
+            <div class="spaceBottom"/>
+            <div id="addSmall" >
+                <textarea placeholder="Добавить книги (одна книга на линии)" class="newBooks"></textarea><br/>
+                <input type="button" class="button" value="ОК" data-children="small" onclick="parseNewBooksBig(this)"/>
+            </div>
 
         </div>
       </div>
@@ -47,30 +59,69 @@
     var books = new ReadingBooks();
     
     books.fetch({
-        
-          success: function(collection) {
-            var listSmall = $("#listSmall");
-            var listBig = $("#listBig");
-              
-            collection.each(function(object) {
-                var doneClass = object.get("done") ? "done" : "";
-                var order = object.get("order");
-                var name = object.get("name");
-                var children = object.get("children");
-                
-                var rowDiv = "<div class='row " + doneClass + "'>" + order + ". " + name + "</div>";
-                
-                if( children == "small"){
-                    listSmall.append(rowDiv);
-                }else{
-                    listBig.append(rowDiv);
-                }
-            });
-          },
-          error: function(collection, error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
+      success: function(collection) {
+        books = collection;
+        render();
+      }
+    });
+
+    
+    function render(collection){
+        var listSmall = $("#listSmall");
+        var listBig = $("#listBig");
+
+        listSmall.html("");
+        listBig.html("");
+
+        books.each(function(object) {
+            var doneClass = object.get("done") ? "done" : "";
+            var checkedClass = object.get("done") ? "checked" : "unchecked";
+            var order = object.get("order");
+            var name = object.get("name");
+            var children = object.get("children");
+            var id = object.id;
+
+            var imageElement = '<img src="css\\images\\' + checkedClass + '.png" class="toggleDone ' + checkedClass;
+            imageElement +=      '" width="24" height="24" onclick="toggleDone(\'' + object.id + '\')"/>';
+
+            var rowDiv = '<div class="homework-row ' + doneClass + '">' + imageElement + name + '</div>';
+
+            if( children == "small"){
+                listSmall.append(rowDiv);
+            }else{
+                listBig.append(rowDiv);
+            }
         });
+    }
+    
+    function toggleDone(objectId){
+        var toUpdate = books.get(objectId);
+        var newDoneValue = !toUpdate.get("done");
+        toUpdate.set("done", newDoneValue);
+        
+        toUpdate.save();
+        render();
+    }        
+    
+    function parseNewBooksBig(saveButton){
+        var textareaElement = $(saveButton).prevAll("textarea.newBooks").first();
+        var newContent = textareaElement.val();
+        var children = $(saveButton).attr("data-children");
+        
+        $.each(newContent.split('\n'), function(index, bookName){
+            console.log(bookName);
+            
+             books.create({
+                children: children,
+                order: books.nextOrder(),
+                name: bookName
+              });     
+        });
+        
+        render();
+        textareaElement.val("");
+    }
+    
     
 </script>
 

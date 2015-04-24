@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/underscore.js"></script>
   <script type="text/javascript" src="js/classwork.js"></script>
+
 </head>
                    
 
@@ -79,46 +80,54 @@
                     
                     print( '<input class="edit w50 input newFrom" value="'  + from + '" /> <label class="edit normal">-</label> ');
                     print( '<input class="edit w50 input newTo" value="'  + to + '" />');
-
+                    print( '. ');
                     break;
                     
                 case 'readingbooks':
-                    print('Читать рассказ: "' + name + '": ');
+                    print('Читать рассказ: "' + name + '"');
+                    print( '. ');
                     break;
                     
                 case 'movies':
                     print('Смотреть фильм: ');
                     print("<a href='" + link + "' target='_blank'>" + name + "</a>");
+                    print( '. ');
                     break;
                     
                 case 'audiobooks':
                     print('Слушать рассказ: ');
                     print("<a href='" + link + "' target='_blank'>" + name + "</a>");
+                    print( '. ');
                     break;
+                    
+                case 'words':
+                    print('Учить слова: ');
+                    print( name.replace(/,/g, ', ') );
+                    print( '. ');
+                    break;    
             } %>
         <span class="label normal"><%= text.replace(/(?:\r\n|\r|\n)/g, '<br />') %></span>
-        
-        <div class="actions" style="display:none">
-          <image src="css\images\arrowUp.png" class="moveUp"/>
-          <image src="css\images\edit.png"   class="editLink" title="Изменить"/>
-          <image src="css\images\ok.png"     class="saveLink" title="Сохранить"/>
-          <image src="css\images\cancel.png" class="cancelEditLink" title="Не сохранять изменения"/>
-          <image src="css\images\trash.png"   title="Удалить" onclick="$(this).next('.deleteConfirm').show();"/>
-          <div class="deleteConfirm" style="display:none">Удалить? 
-            <span class="link remove">да!</span>    
-            <span class="link" onclick="$(this).parents('.deleteConfirm').hide();">нет</a></span>
-          </div>
-        </div>
-        
         <textarea class="edit newText" placeholder="Добавь текст"><%=text%></textarea>
         
-        
+        <div class="nobr">
+            <span class="link saveLink" >Сохранить</span>
+            <span class="link cancelEditLink" >Отменить</span>
+        </div>
+        <div class="first actions nobr" style="display:none">
+          <image src="css\images\arrowUp.png" class="moveUp"/>
+          <image src="css\images\edit.png"  class="editLink" title="Изменить"/>
+          <image src="css\images\trash.png" class="remove" title="Удалить" onclick="$(this).next('.deleteConfirm').show();"/>
+          <div class="deleteConfirm" style="display:none"><b>Удалить? 
+            <span class="link removeConfirmed">да!</span>    
+            <span class="link" onclick="$(this).parents('.deleteConfirm').hide();">нет</a></span></b>
+          </div>
+        </div>
+    
     </script>
 
     <script type="text/template" id="add-exercise-template">
           <div class="row">
-             <div class="two columns">
-                  <select class="selectNewType" data-lesson="<%= lesson %>">
+             <select class="selectNewType" data-lesson="<%= lesson %>">
                         <option value="-">+ что?</option>
                         <option value="books" <%= selectedType == "books" ? "selected" : "" %> >Учебное пособие</option>
                         <option value="readingbooks" <%= selectedType == "readingbooks" ? "selected" : "" %>>Книгу для чтения</option>
@@ -127,13 +136,12 @@
                             <option value="words" <%= selectedType == "words" ? "selected" : "" %>>Часто используемые слова</option>
                         <% } %>
                         <option value="audiobooks" <%= selectedType == "audiobooks" ? "selected" : "" %>>Аудиокниги</option>
-                        <option value="freetext" <%= selectedType == "freetext" ? "selected" : "" %>>Другое</option>
+                        <option value="freetext" <%= selectedType == "freetext" ? "selected" : "" %>>Написать свое задание</option>
                     </select>
-             </div>
-             </div>
+            </div>
              
              <% if(selectedType != null){ %>
-                  <div class="ten columns newContent">
+                  <div class="row newContent">
                         
                         <% if(details.resourceList != null){ %>
                             <select class="newSelectName" onchange="javascript: updateDetails(this);" >
@@ -163,12 +171,19 @@
                             <a href="<%= details.link %>" target="_blank" class="newPreviewLink">Показать</a>
                         <% } %>
                         
+                        <% if(details.wordslist != null){ %>
+                            <input class="newWords" value="<%= details.wordslist %>" type="hidden" />
+                            (слова: <%= details.wordslist %>)
+                        <% } %>
+                        
                         <div class="help">Добавь свой текст:</div>
-                        <textarea class="newFreeText" value=""  />
+                        
+                        <!-- Free text for new item is populated with common words, if words are selected. -->
+                        <textarea class="newFreeText" ></textarea>
 
                         <div>
-                            <input class="button addNew" type="button" value="Добавить" data-lesson="<%= lesson %>"/>
-                            <input class="button cancelNew" type="button" value="X" data-lesson="<%= lesson %>"/>
+                            <span class="link addNew" data-lesson="<%= lesson %>">Добавить</span>
+                            <span class="link cancelNew" data-lesson="<%= lesson %>">Отменить</span>
                       </div>
                   </div>
               <% } %>

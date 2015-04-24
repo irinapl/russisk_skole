@@ -27,7 +27,7 @@ $(function() {
       "click .editLink"   : "edit",
       "click .saveLink"   : "close",
       "click .cancelEditLink" : "cancel",
-      "click .remove":  "remove"
+      "click .removeConfirmed":  "remove"
     },
 
     initialize: function() {
@@ -55,7 +55,6 @@ $(function() {
     close: function() {
         this.model.set(
          { "book": $(this.el).find(".newBook").val(),
-           "name": $(this.el).find(".newName").val(),
            "link": $(this.el).find(".newLink").val(),
            "text": $(this.el).find(".newText").val(),
            "from": $(this.el).find(".newFrom").val(),
@@ -64,6 +63,7 @@ $(function() {
         
       this.model.saveChanges();
       $(this.el).removeClass("editing");
+      $(this.el).find(' div.first').show();
     },
 
     cancel: function() {
@@ -105,7 +105,7 @@ $(function() {
 
           _.bindAll(this, 'addOne', 'addAll', 'render', 'enablePageEdit', 'closeEditAll', 'moveUp', "createNew", "cancelNew", "loadContentForSelectNewType");        
           
-          self._loadWeekPlan(function() { self.renderWeekPlan(); });
+          self._loadWeekPlan(function(weekplan) { self.renderWeekPlan(); });
           self._loadAllOtherData();
         
           this.exercises = new Exercises;
@@ -134,7 +134,8 @@ $(function() {
           this.weekplan.query = new Parse.Query(WeekPlan);
           this.weekplan.query.get(planId, {
                         success: function(weekplan) { 
-                            self.weekplan = weekplan; if (callback) callback();   
+                            self.weekplan = weekplan; 
+                            if (callback) callback();   
                         }
                     });
         }
@@ -145,6 +146,7 @@ $(function() {
         this._loadReadingBooks();
         this._loadAudioBooks();
         this._loadFilms();
+        this._loadWords();
     },
       
     _loadBooks: function() {
@@ -190,6 +192,17 @@ $(function() {
             });
     },
       
+    _loadWords: function() {
+        var query = new Parse.Query(CommonWord); 
+        query.notEqualTo("doneBig", true);
+        query.limit(5);
+        query.find({
+                    success: function(results) {
+                        var collection = new CommonWords;
+                        self.words = collection.reset(results);
+                    }
+            });
+    },
       
     loadContentForSelectNewType: function(e) {
           var selectedType = e.target.options[e.target.selectedIndex].value;
@@ -201,11 +214,11 @@ $(function() {
           var resourceDetails = {to: null, from: null, unit: null, link: null, resourceList: null};
         
         
-          var isResource = selectedType != "freetext";
+          var isResource = selectedType != "freetext" && selectedType != "words";
           if(isResource){
               
               resourceDetails.resourceList = self[selectedType].toJSON();
-              var firstSelectedOption = self[selectedType].first()
+              var firstSelectedOption = self[selectedType].first();
 
               if(firstSelectedOption.get("link") != undefined){
                   resourceDetails.link = firstSelectedOption.get("link");
@@ -219,6 +232,9 @@ $(function() {
               }
           }
         
+          if(selectedType == "words"){
+              resourceDetails.wordslist = self.words.pluck("word");
+          }
           
           var viewData = { lesson: lesson, selectedType:selectedType, details: resourceDetails };
           $('#' + lesson + ' .newExercise').html(this.addNewTemplate(viewData));
@@ -250,7 +266,6 @@ $(function() {
         var idClicked = exerciseItemClicked.attr("id");
         var idAbove = exerciseItemClicked.prev('.exerciseItem').attr("id");
         if(idAbove == undefined){
-            console.log("Nothing above..");
             return;
         }
         
@@ -272,10 +287,8 @@ $(function() {
       var lesson = e.target.getAttribute("data-lesson");
         
       var order = this.exercises.nextOrder();
-      console.log("next order: " + order);
-      var readableLessonName = this.exercises.createLessonName(self.weekplan, lesson);
-      console.log("readableLessonName: " + readableLessonName);
-    
+      var lessonDate = weekplan.get("date");
+      
       var lessonDiv = $('#' + lesson);
       var type = lessonDiv.find('.selectNewType option:selected').val();
         
@@ -284,22 +297,30 @@ $(function() {
       var resourceName = selectedResourceOption.text();
       var resourceId = selectedResourceOption.val();
       var link = selectedResourceOption.attr("data-link");
+      var unit = selectedResourceOption.attr("data-unit");
+      
+      if(type == "words"){
+        resourceName = lessonDiv.find('.newContent .newWords').val();
+      }
         
       var from = lessonDiv.find('.newFromValue').val();
       var to = lessonDiv.find('.newToValue').val();
+      if(to == "") { to = from; }
       var freetext = lessonDiv.find('.newFreeText').val();
+      
       
       this.exercises.create({
         planId: this.planId,
         children: this.children,
         order:   order,
-        lessonName: readableLessonName,
+        lessonDate: lessonDate,
         lesson:  lesson,
         type:  type,
         name:  resourceName,
         resourceId:  resourceId,
         from:  from,
         to:  to,
+        unit:  unit,
         link: link,
         text: freetext
       });
@@ -318,8 +339,7 @@ $(function() {
     },
       
     render: function() {
-         //this.delegateEvents();
-         return this;
+       return this;
     },
       
     enablePageEdit: function() {
@@ -362,9 +382,6 @@ $(function() {
       console.log("addAll. Total size: + " + this.exercises.size());
       $('#enableEditAll').show();
       $('#closeEditAll').hide();
-      //$('.newExercise').hide();
-      //$('div.actions').hide();
-        
       $('#lesson1 .newExercise').html(this.addNewTemplate({ lesson: "lesson1", selectedType: null, details : null }));
       $('#lesson2 .newExercise').html(this.addNewTemplate({ lesson: "lesson2", selectedType: null, details: null }));
       $('#lesson3 .newExercise').html(this.addNewTemplate({ lesson: "lesson3", selectedType: null, details: null }));

@@ -18,11 +18,13 @@
       
       isNextTime: function() {
         var today = moment(new Date());
-        today.hour(10);
-        today.minute(0);
+           
         var rowDate = moment(this.get("date"));
-        var daysDiff = rowDate.diff(today, 'days');
-        var lessThanAweek = daysDiff >= 0 && daysDiff < 7;
+        rowDate.hour(12);
+        rowDate.minute(0);
+          
+        var hoursDiff = rowDate.diff(today, 'hours');
+        var lessThanAweek = hoursDiff >= 0 && hoursDiff < (7*24);
         return lessThanAweek;
       },
       
@@ -109,6 +111,7 @@
  //===================== AUDIO BOOKS ====================================
 
  var AudioBook = Parse.Object.extend("AudioBooks", {
+        idAttribute: "objectId",
         saveChanges: function() {
           this.save({
               name: this.get("name"),
@@ -119,7 +122,7 @@
     });
     
   var AudioBooks = Parse.Collection.extend({
-
+       
        model: AudioBook,
 
        render: function() {
@@ -141,7 +144,8 @@
 //===================== READING BOOKS ====================================
 
  var ReadingBook = Parse.Object.extend("ReadingBooks", {
-        saveChanges: function() {
+     idAttribute: "objectId",   
+     saveChanges: function() {
           this.save({
               
           });
@@ -227,7 +231,7 @@
     
  
   var Book = Parse.Object.extend("Books", {
-      
+      idAttribute: "objectId",
       defaults: {
           lastUsed: "",
           unit: "side",
@@ -335,44 +339,21 @@
       },
       
       setDoneBy: function(childName){
-         
          var doneBy = this.get("doneBy");
          if(doneBy == undefined){
             doneBy = [];
          }
         
          var alreadyDone = _.contains(doneBy, childName);
-         
-         console.log("doneBy = " + doneBy +  ", already done=" + alreadyDone);
-         //var updatedDoneBy = _.clone(doneBy);
-         //updatedDoneBy.pop();
-
-           
-          
-          if(alreadyDone){
+         if(alreadyDone){
             doneBy = _.without(doneBy, childName);
-            //doneBy.without(childName);
-            //doneBy = _.filter(doneBy, function(name){ return name == childName; });
           }else{
             doneBy.push(childName);
           }
-          
-          //this.set('doneBy', updatedDoneBy);
-           
-          console.log("updated = " + doneBy);
-          
+                    
           var updatedDoneBy = _.clone(doneBy);
-          console.log("updatedDoneBy = " + updatedDoneBy);
-          
-          //this.set("doneBy", updatedDoneBy);
-          //this.save({doneBy: updatedDoneBy});
-          //this.trigger("change");
-          //this.trigger("change:doneBy");
-          
           this.set("doneBy", updatedDoneBy);
           this.save();
-          
-          console.log("SAVED!! ");
       },
       
       saveChanges: function() {
@@ -383,7 +364,8 @@
               text: this.get("text"),
               from: this.get("from"),
               to: this.get("to"),
-              doneBy: this.get("doneBy")
+              doneBy: this.get("doneBy"),
+              lessonDate: this.get("lessonDate")
           });
       },
       
@@ -424,12 +406,6 @@
             return this.last().get('order') + 1;
         },
       
-        createLessonName: function(weekPlanDate, lesson) {
-            var weekNumber = moment(weekPlanDate).week();
-            var year = moment(weekPlanDate).year();
-            return weekNumber + "_" + year + "_" + lesson;
-         },
-
         comparator: function(book) {
             return book.get('order');
         }
