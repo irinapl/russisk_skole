@@ -127,7 +127,7 @@ $(function() {
       state.on("change", this.render, this);
         
       //TODO: get current homework ID
-      this.planId = "zPuXgWnCYM"; 
+      this.planId = "HjJm6NSFyl"; 
       
       this.render();
     },
