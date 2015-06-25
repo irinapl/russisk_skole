@@ -1,0 +1,14 @@
+- DONE: når sletter en oppgave - siden oppdateres ikke!
+- DONE: legge til "edit" for oppgavene
+- legge til rekkefølge!
+- Tilpasse mobil!!
+
+
+- remove - ask first!
+
+
+git config --global core.editor  'C:\Program Files (x86)\Notepad++\notepad++.exe'
+
+git config --global core.editor "c\:/Program\ Files\ \(x86\)/Notepad++/notepad++.exe -multiInst -nosession -noPlugin"
+
+git config --global core.editor "'c:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession -noPlugin"

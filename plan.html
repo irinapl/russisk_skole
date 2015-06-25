@@ -86,7 +86,7 @@
                 </div>
                 
                 <select class="edit newWhere">
-                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                    <% _(["", "Ира", "Лена", "Оля"]).each(function(e) { %>
                       <option value="<%= e %>" <% if(data.where == e) print("selected") %>><%= e %></option>
                     <% }); %>
                 </select>
@@ -94,7 +94,7 @@
           <td>
                 <div class="label"><a href="classwork.html#small?id=<%=planId%>"><%= data.small_kids %></a></div>
                 <select class="edit newSmall">
-                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                    <% _(["", "Ира", "Лена", "Оля"]).each(function(e) { %>
                       <option value="<%= e %>" <% if(data.small_kids == e) print("selected") %>><%= e %></option>
                     <% }); %>
                 </select>
@@ -102,7 +102,7 @@
           <td>
                 <div class="label"><a href="classwork.html#big?id=<%=planId%>"><%= data.big_kids %></a></div>
                 <select class="edit newBig">
-                    <% _(["Ира", "Лена", "Оля"]).each(function(e) { %>
+                    <% _(["", "Ира", "Лена", "Оля"]).each(function(e) { %>
                       <option value="<%= e %>" <% if(data.big_kids == e) print("selected") %>><%= e %></option>
                     <% }); %>
                 </select>
@@ -119,31 +119,23 @@
     </script>
     
     <script type="text/template" id="stats-template">
-        <h5>Summert:</h5>
-        <table id="weekplan-list" width="200px">
+        <h5>Статистика:</h5>
+        <table id="weekplan-list" width="400px">
             <thead>
                 <tr>
-                  <th>Navn</th>
-                  <th class="center">Små</th>
-                  <th class="center">Store</th>
-                  <th class="center">Totalt</th>
+                  <th></th>
+                  <th class="center">Младшие</th>
+                  <th class="center">Старшие</th>
+                  <th class="center">Всего</th>
                  </tr>
              </thead>
-             <tr><td>Lena</td>
-                <td class="center"><%= Lena_small %></td>
-                <td class="center"><%= Lena_big %></td>
-                <td class="center"><%= Lena_totale %></td>
+            <% _.each(teacherStats, function(teacher, name) { %>
+            <tr><td><%= name %></td>
+                <td class="center"><%= teacher.small_kids %></td>
+                <td class="center"><%= teacher.big_kids %></td>
+                <td class="center"><%= (teacher.small_kids + teacher.big_kids) %></td>
             </tr>
-            <tr><td>Olga</td>
-                <td class="center"><%= Olga_small %></td>
-                <td class="center"><%= Olga_big %></td>
-                <td class="center"><%= Olga_totale %></td>
-            </tr>
-            <tr><td>Ira</td>
-                <td class="center"><%= Ira_small %></td>
-                <td class="center"><%= Ira_big %></td>
-                <td class="center"><%= Ira_totale %></td>
-            </tr>
+            <% }); %>
         </table>
     </script>
 

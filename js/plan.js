@@ -85,52 +85,58 @@ $(function() {
           this.$el.html(_.template($("#manage-weekplan-template").html()));
 
           this.weekplans = new WeekPlans;
-          this.weekplans.query = new Parse.Query(WeekPlan);
+          var query = new Parse.Query(WeekPlan);
+          query.greaterThan("date",  moment("2015-05-01").toDate());
+          query.find({
+            success: function(results) {
+              console.log(results);
+              self.weekplans.reset(results);
+            },
+            error: function(error) {
+              alert("Error: " + error.code + " " + error.message);
+            }
+          });
 
           _.bindAll(this, 'addOne', 'addAll', 'render');        
           this.weekplans.bind('add',     this.addOne);
           this.weekplans.bind('reset',   this.addAll);
           this.weekplans.bind('all',     this.render);
         
-
-          // Fetch all the todo items for this user
-          this.weekplans.fetch();
           state.on("change", this.filter, this);
       },
     
     // Re-rendering the App just means refreshing the statistics -- the rest
     // of the app doesn't change.
     render: function() {
-      
-      var Lena_small = this.weekplans.countByName("small_kids", "Lena").length;
-      var Lena_big = this.weekplans.countByName("big_kids", "Lena").length;
-    
-        
-      var Olga_small = this.weekplans.countByName("small_kids", "Olga").length;
-      var Olga_big = this.weekplans.countByName("big_kids", "Olga").length;
-     
-        
-      var Ira_small = this.weekplans.countByName("small_kids", "Ira").length;
-      var Ira_big = this.weekplans.countByName("big_kids", "Ira").length;
-     
-      this.$('#lesson_count').html(this.statsTemplate({
-        Lena_totale: Lena_small + Lena_big,
-        Lena_small: Lena_small,
-        Lena_big:   Lena_big,
-        Olga_totale: Olga_small + Olga_big,
-        Olga_small: Olga_small,
-        Olga_big:   Olga_big,
-        Ira_totale:  Ira_small + Ira_big,
-        Ira_small:  Ira_small,
-        Ira_big:    Ira_big
-      }));
-        
-     this.delegateEvents();
-     return this;
+
+      var teachers = {};
+
+      this.weekplans.forEach(
+          function(weekPlanRow){
+
+            var kidsKind = ["small_kids", "big_kids"];
+            kidsKind.forEach(
+                function(kind){
+                  var teacherName = weekPlanRow.get(kind);
+                  var teacherStats = teachers[teacherName];
+                  if(!teacherStats){
+                    teacherStats = {small_kids : 0, big_kids: 0};
+                    teachers[teacherName] = teacherStats;
+                  }
+                  teacherStats[kind] += 1;
+                }
+            );
+           });
+
+      delete teachers[""];
+      this.$('#lesson_count').html(this.statsTemplate( {teacherStats: teachers} ));
+
+      this.delegateEvents();
+      return this;
     },
       
     addOne: function(weekplan) {
-        console.log("addOne");
+      console.log("addOne");
         
       var view = new WeekPlanView( {model: weekplan} );
       var renderedData = view.render().el;

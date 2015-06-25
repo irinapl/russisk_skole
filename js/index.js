@@ -32,8 +32,12 @@ $(function() {
 
     render: function() {
        var nextTimeRow = this.weekplans.getNextTime();
-      
-       $(this.el).html(this.template(nextTimeRow.toJSON()));  
+       
+       if(nextTimeRow){
+            $(this.el).html(this.template(nextTimeRow.toJSON()));
+       }else{
+            $("#errormessage").html("Sommer!! Произошла какая то ошибка. Свяжитесь со службой поддержки (Ирой) :)");
+       }
        return this;
     }
   });

@@ -24,7 +24,7 @@
 
 <body>
     <div class="container">
-        
+        <div id="errormessage" class="error"></div>
          <div style="margin-top: 5%">
             <h4>Русская школа</h4>
             <div id="nextTime" class="content">
@@ -57,8 +57,7 @@
     </div>
     
     <script type="text/template" id="nexttime-template">
-       <div id="errormessage" class="error"></div>
-       <div><h5>Следующая неделя: <a href="plan.html"><%=formattedDate %></a></h5></div>
+       <div><h5>Следующий урок: <a href="plan.html"><%=formattedDate %></a></h5></div>
        <h5>
         <%= (formattedEvent == undefined || formattedEvent == "") ? '' : formattedEvent +': '%>
         <%= data.comments == undefined ? '-'  : data.comments %>
